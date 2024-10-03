@@ -11,7 +11,8 @@ const TYPE_IMAGE = {
 	"image/jpg": "jpg",
 };
 const MAX_SIZE_PICTURE_GALLERY = 5 * 1024 * 1024;
-const MAX_SIZE_PICTURE_PROFILE = 370 * 300;
+const MAX_SIZE_PICTURE_PROFILE = 2 * 1024 * 1024;
+;
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {

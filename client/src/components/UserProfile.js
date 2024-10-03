@@ -171,13 +171,15 @@ const UserProfile = () => {
     setisModalVisible(false);
   };
 
+  console.log(user.profile)
+
   return (
     <Row>
       <Col xs={24} md={11} span={8}>
         <div id="side-container" style={{ marginBottom: "20px" }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Avatar
-              id="profile-picture"
+              id="profile-picture-2"
               size={150}
               src={
                 user.profile ? "http://localhost:3001/api/" + user.profile : ""

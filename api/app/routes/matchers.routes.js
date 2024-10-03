@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const authMiddleware = require("../middlewares/auth.middleware");
 const userMiddleware = require("../middlewares/user.middleware");
-const macthersController = require("../controllers/matchers.controller.js");
+const matchersController = require("../controllers/matchers.controller.js");
 
 /**
  * @swagger
@@ -18,8 +18,11 @@ const macthersController = require("../controllers/matchers.controller.js");
  */
 
 router
-.use("/", authMiddleware.isAuth, userMiddleware.completeInfos )
-.get("/list", macthersController.loadMatchers )
+    .use("/", authMiddleware.isAuth, userMiddleware.completeInfos)
+    .get("/list", matchersController.loadMatchers)
+    .post("/find", matchersController.findMatch)   // Route to find a specific match between two users
+    .post("/create", matchersController.createMatch) // Route to create a match between two users
+    .delete("/unmatch", matchersController.unmatch); // Route to delete/unmatch between two users
 
 module.exports = router;
 

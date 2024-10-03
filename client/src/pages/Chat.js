@@ -1,19 +1,17 @@
-import Layout from "../layout/default";
-import "../assets/css/Profile.less";
+import React, { useContext, useEffect, useState } from "react";
 import { Row, Col, Card, Avatar, Divider, Collapse, Button, Input } from "antd";
-
 import { ReceivedMsg } from "../components/ReceivedMsg";
 import { SentMsg } from "../components/SentMsg";
 import { SendOutlined } from "@ant-design/icons";
 import { Context } from "../Contexts/Context";
 import { matchingAction, msgAction } from "../actions/chatActions";
-import { useContext, useEffect, useState } from "react";
 import { socketConn as socket } from "../sockets";
+import Layout from "../layout/default";
 
 const { Panel } = Collapse;
+
 const Chat = () => {
   const { state } = useContext(Context);
-
   const [matchers, setMatchers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [activeChat, setActiveChat] = useState({
@@ -22,62 +20,91 @@ const Chat = () => {
   });
   const [messageToSend, setMessageToSend] = useState("");
 
+  // Function to load messages for the active chat
   const loadMessages = async () => {
-    const res = await msgAction(state.token, activeChat.chatid);
-    if (res) {
-      setMessages(res.data);
+    console.log("Loading messages for chat ID:", activeChat.chatid);
+    if (activeChat.chatid) {
+      const res = await msgAction(state.token, activeChat.chatid);
+      console.log("Response from msgAction:", res);
+      if (res && res.success) {
+        console.log("Loaded messages: ", res.data);
+        setMessages(res.data);
+      } else {
+        console.error("Failed to load messages:", res);
+      }
     }
   };
 
+  // Function to open a chat and set it as active
   const openChat = (userid, chatid) => {
-    setActiveChat({
-      userid: userid,
-      chatid: chatid,
-    });
-
-    loadMessages();
+    console.log("Opening chat with User ID:", userid, " and Chat ID:", chatid);
+    setActiveChat({ userid, chatid });
   };
 
-  const handlTyping = (e) => {
+  // Handle typing event
+  const handleTyping = (e) => {
+    setMessageToSend(e.target.value);
+    console.log("Typing message:", e.target.value);
     if (e.target.value !== "") {
-      setMessageToSend(e.target.value);
-      socket.emit("isTyping", { chatid: activeChat });
+      console.log("Emitting typing event for chat ID:", activeChat.chatid);
+      socket.emit("isTyping", { chatid: activeChat.chatid });
     }
   };
 
-  const handleSendMsg = async () => {
-    socket.emit("sendMessage", {
-      message: messageToSend,
-      sender: state.id,
-      receiver: activeChat.userid,
-      chat_id: activeChat.chatid,
-    });
-    setTimeout(() => {
-      loadMessages();
-    }, 500);
+  // Handle sending message
+  const handleSendMsg = () => {
+    if (messageToSend.trim() !== "") {
+      console.log("Sending message:", messageToSend);
+      socket.emit("sendMessage", {
+        message: messageToSend,
+        sender: state.id,
+        receiver: activeChat.userid,
+        chat_id: activeChat.chatid,
+      });
+      setMessageToSend("");
+      setTimeout(() => {
+        loadMessages();
+      }, 1000); // Adjust timeout if needed
+    }
   };
 
+  // Fetch matched users when component mounts
   useEffect(() => {
-    const Matchers = async () => {
+    console.log("Fetching matched users...");
+    const fetchMatchers = async () => {
+      console.log("State Token: ", state.token); // Log the token to verify
       const res = await matchingAction(state.token);
-      setMatchers(res.users);
+      console.log("Response from matchingAction:", res);
+      if (res && res.success && res.users && res.users.length > 0) {
+        setMatchers(res.users);
+      } else {
+        console.error("No matched users found or an error occurred:", res);
+      }
     };
-    Matchers();
-    return () => {
-      setMatchers([]);
-    };
-    // eslint-disable-next-line
-  }, []);
+    fetchMatchers();
+  }, [state.token]);
 
+
+  // Set up socket listener for new messages
   useEffect(() => {
+    console.log("Setting up socket listener for new messages...");
     socket.on("newMessage", (data) => {
-      setMessages([...messages, data.message]);
+      console.log("New message received via socket:", data);
+      if (data.chat_id === activeChat.chatid) {
+        setMessages((prevMessages) => [...prevMessages, data.message]);
+      }
     });
-  }, [messages]);
+
+    return () => {
+      console.log("Cleaning up socket listener for new messages...");
+      socket.off("newMessage");
+    };
+  }, [messages, activeChat.chatid]);
 
   return (
     <Layout>
       <Row justify="center">
+        {/* Sidebar for conversations */}
         <Col lg={8} span={24} style={{ padding: "10px" }}>
           <Collapse
             defaultActiveKey={["0"]}
@@ -97,7 +124,8 @@ const Chat = () => {
               >
                 {matchers.map((item) => (
                   <Card
-                    hoverable={true}
+                    key={item.id}
+                    hoverable
                     onClick={() => openChat(item.id, item.chatid)}
                     style={{
                       width: "100%",
@@ -106,28 +134,21 @@ const Chat = () => {
                     }}
                   >
                     <Row align="middle">
-                      <Avatar
-                        src={"http://localhost:3001/api/" + item.profile}
-                      />
+                      <Avatar src={`http://localhost:3001/api/${item.profile}`} />
                       <h3 style={{ marginBottom: "0px", marginLeft: "10px" }}>
                         {item.lastname}_{item.firstname}
                       </h3>
                     </Row>
-                    <div></div>
                   </Card>
                 ))}
               </div>
             </Panel>
           </Collapse>
         </Col>
+
+        {/* Main chat area */}
         <Col lg={14} span={24} style={{ height: "800px", padding: "10px" }}>
-          <Card
-            style={{
-              width: "100%",
-              borderRadius: "15px",
-              height: "100%",
-            }}
-          >
+          <Card style={{ width: "100%", borderRadius: "15px", height: "100%" }}>
             <Divider />
             <Card
               style={{
@@ -139,19 +160,18 @@ const Chat = () => {
                 overflowX: "hidden",
               }}
             >
+              {/* Render messages */}
               {messages.map((item) =>
                 item.user_id === state.id ? (
-                  <>
-                    <SentMsg message={item} />
-                  </>
+                  <SentMsg key={item.id} message={item} />
                 ) : (
-                  <>
-                    <ReceivedMsg message={item} />
-                  </>
+                  <ReceivedMsg key={item.id} message={item} />
                 )
               )}
             </Card>
-            {activeChat.chatid !== null ? (
+
+            {/* Input area for sending messages */}
+            {activeChat.chatid && (
               <Row
                 type="flex"
                 style={{
@@ -164,7 +184,8 @@ const Chat = () => {
               >
                 <Col xs={19} md={22} span={20}>
                   <Input
-                    onChange={(e) => handlTyping(e)}
+                    value={messageToSend}
+                    onChange={handleTyping}
                     className="input-reply"
                     maxLength={100}
                     style={{
@@ -180,13 +201,11 @@ const Chat = () => {
                   <Button
                     type="primary"
                     shape="circle"
-                    onClick={() => handleSendMsg()}
+                    onClick={handleSendMsg}
                     icon={<SendOutlined style={{ fontSize: "0.8rem" }} />}
                   />
                 </Col>
               </Row>
-            ) : (
-              ""
             )}
           </Card>
         </Col>

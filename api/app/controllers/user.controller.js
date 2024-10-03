@@ -48,22 +48,22 @@ exports.register = async (req, res) => {
 		};
 
 		await User.save(newUser)
-		.then(async (user) => {
-			// Send email confirmation
-			await mailFuncs.sendConfirmationMail({
-				token: aToken,
-				email: user.email,
-				username: user.username,
-				firstname: user.firstname,
-				lastname: user.lastname,
+			.then(async (user) => {
+				// Send email confirmation
+				await mailFuncs.sendConfirmationMail({
+					token: aToken,
+					email: user.email,
+					username: user.username,
+					firstname: user.firstname,
+					lastname: user.lastname,
+				});
+				return res.status(201).json({ success: true, message: "Successfull registration !" });
+			})
+			.catch(async (error) => {
+				// Delete user if an error has occurend
+				await User.deleteOne({ username: username });
+				return res.status(400).json({ success: false, error: "Registration failed !" });
 			});
-			return res.status(201).json({ success: true, message: "Successfull registration !" });
-		})
-		.catch(async (error) => {
-			// Delete user if an error has occurend
-			await User.deleteOne({ username: username });
-			return res.status(400).json({ success: false, error: "Registration failed !" });
-		});
 	} catch (e) {
 		// Delete user if an error has occurend
 		await User.deleteOne({ username: username });
@@ -86,8 +86,8 @@ exports.registerGoogle = async (req, res) => {
 			googleid: googleid,
 		};
 		await User.save(newUser)
-		.then(() => res.status(201).json({ success: true, message: "Successfull registration !" }) )
-		.catch((error) => res.status(400).json({ success: false, error: "Can't create an account with your googe account !" }) );
+			.then(() => res.status(201).json({ success: true, message: "Successfull registration !" }))
+			.catch((error) => res.status(400).json({ success: false, error: "Can't create an account with your googe account !" }));
 	} catch (e) {
 		return res.status(400).json({ success: false, error: "An error has occurred while register with your google account, try later !" });
 	}
@@ -101,20 +101,20 @@ exports.resetPassword = async (req, res) => {
 		const resetToken = encodeURIComponent(token);
 
 		await User.findOneAndUpdate({ 'email': email }, { 'rToken': resetToken })
-		.then(async (userUpdated) => {
-			// Send Recovery email
-			await mailFuncs.sendRecoveryMail({
-				token: resetToken,
-				email: userUpdated.email,
-				firstname: userUpdated.firstname,
-				lastname: userUpdated.lastname,
-			});
-			return res.status(200).json({
-				success: true,
-				message: "A reset password link sent to your email !"
-			});
-		})
-		.catch((error) => res.status(400).json({ success: false, error: "Failed to send reset password link !" }) );
+			.then(async (userUpdated) => {
+				// Send Recovery email
+				await mailFuncs.sendRecoveryMail({
+					token: resetToken,
+					email: userUpdated.email,
+					firstname: userUpdated.firstname,
+					lastname: userUpdated.lastname,
+				});
+				return res.status(200).json({
+					success: true,
+					message: "A reset password link sent to your email !"
+				});
+			})
+			.catch((error) => res.status(400).json({ success: false, error: "Failed to send reset password link !" }));
 	} catch (e) {
 		return res.status(400).json({ success: false, error: "An error has occurred while reset your password, try later !" });
 	}
@@ -126,15 +126,15 @@ exports.verify = async (req, res) => {
 
 	try {
 		await User.findOneAndUpdate({ email: email.toLowerCase() }, { aToken: null, verified: true })
-		.then(async (user) => {
-			await mailFuncs.sendSuccessActivationMail({
-				email: user.email,
-				firstname: user.firstname,
-				lastname: user.lastname,
-			});
-			return res.status(200).json({ success: true, message: "Your account has been successfully activated !" });
-		})
-		.catch((error) => res.status(400).json({ success: false, error: "Failed to verify your account !" }) );
+			.then(async (user) => {
+				await mailFuncs.sendSuccessActivationMail({
+					email: user.email,
+					firstname: user.firstname,
+					lastname: user.lastname,
+				});
+				return res.status(200).json({ success: true, message: "Your account has been successfully activated !" });
+			})
+			.catch((error) => res.status(400).json({ success: false, error: "Failed to verify your account !" }));
 	} catch (e) {
 		return res.status(400).json({ success: false, error: "An error has occurred while activate your account, try later !" });
 	}
@@ -202,10 +202,10 @@ exports.login = async (req, res) => {
 };
 
 // POST - Logout
-exports.logout = ( req, res ) => {
+exports.logout = (req, res) => {
 	try {
-		
-	} catch ( e ) {
+
+	} catch (e) {
 		return res.status(400).json({
 			success: false,
 			error: "An error has occurred while logout, try later !",
@@ -240,6 +240,13 @@ exports.authGoogle = async (req, res) => {
 // GET - Load list of matched profiles
 exports.browsing = async (req, res) => {
 	const userid = req.body.userid;
+
+	// Kiểm tra `userid` có hợp lệ không
+	if (!userid) {
+		return res.status(400).json({ success: false, error: "User ID is missing!" });
+	}
+
+	// Khởi tạo các tùy chọn (options)
 	const options = {
 		age: {
 			min: req.query.minage >= 18 && req.query.minage <= 60 ? req.query.minage : 18,
@@ -253,31 +260,48 @@ exports.browsing = async (req, res) => {
 			min: req.query.minfame >= 0 && req.query.minfame <= 100 ? req.query.minfame : 0,
 			max: req.query.maxfame >= 0 && req.query.maxfame <= 100 ? req.query.maxfame : 100
 		}
-	}
+	};
 
 	try {
-		await User.findOne({ id: userid }).then(async (user) => {
-			await User.findSuggestions(user, options)
-				.then((users) => 
-					res.status(200).json({
-						success: true,
-						users: users,
-					})
-				)
-				.catch((error) =>
-					res.status(400).json({
-						status: false,
-						error: "Failed to load suggestions list !",
-					})
-				);
-		});
+		// Tìm user theo `userid`
+		const user = await User.findOne({ id: userid });
+
+		// Kiểm tra nếu `user` không tồn tại
+		if (!user) {
+			return res.status(404).json({ success: false, error: "User not found!" });
+		}
+
+		// In ra log để kiểm tra
+		console.log("Found user:", user);
+
+		// Thực hiện tìm kiếm suggestion với user và options
+		await User.findSuggestions(user, options)
+			.then((users) => {
+				// Kiểm tra nếu `users` có dữ liệu
+				if (!users || users.length === 0) {
+					return res.status(404).json({ success: false, error: "No suggestions found!" });
+				}
+				return res.status(200).json({
+					success: true,
+					users: users,
+				});
+			})
+			.catch((error) => {
+				console.error("Error in findSuggestions:", error);
+				return res.status(400).json({
+					success: false,
+					error: "Failed to load suggestion list!",
+				});
+			});
 	} catch (e) {
+		console.error("Error in browsing function:", e);
 		return res.status(400).json({
 			success: false,
-			error: "An error has occurred while load suggestions list, try later !",
+			error: `An error has occurred while loading suggestions list, try later! Detailed error: ${e.message}`,
 		});
 	}
 };
+
 
 // GET - Get user informations by id
 exports.findUserById = async (req, res) => {
@@ -343,29 +367,29 @@ exports.profileInfos = async (req, res) => {
 	}
 };
 
-exports.verifyToken = async ( req, res ) => {
+exports.verifyToken = async (req, res) => {
 	try {
 		const { token } = req.body;
 
-		if ( !token ) { return res.status( 200 ).json({ valide: false }); }
+		if (!token) { return res.status(200).json({ valide: false }); }
 		else {
-			jwt.verify( token, process.env.JWT_PKEY, async ( error, payload ) => {
-				if ( error ) {
-					return res.status( 200 ).json({ valide: false });
-				} else if ( payload ) {
+			jwt.verify(token, process.env.JWT_PKEY, async (error, payload) => {
+				if (error) {
+					return res.status(200).json({ valide: false });
+				} else if (payload) {
 					await User.findOne({ 'id': payload.id })
-					.then((user) => {
-						if ( !user ) {
-							return res.status( 200 ).json({ valide: false });
-						} else {
-							return res.status( 200 ).json({ valide: true });
-						}
-					});
+						.then((user) => {
+							if (!user) {
+								return res.status(200).json({ valide: false });
+							} else {
+								return res.status(200).json({ valide: true });
+							}
+						});
 				}
 			});
 		}
-	} catch ( e ) {
-		return res.status( 200 ).json({ valide: false });
+	} catch (e) {
+		return res.status(200).json({ valide: false });
 	}
 }
 
@@ -462,13 +486,13 @@ const storage = multer.diskStorage({
 			cb(
 				null,
 				file.fieldname +
-					"-" +
-					user.username +
-					"-" +
-					Date.now() +
-					"-" +
-					"." +
-					TYPE_IMAGE[file.mimetype]
+				"-" +
+				user.username +
+				"-" +
+				Date.now() +
+				"-" +
+				"." +
+				TYPE_IMAGE[file.mimetype]
 			);
 		});
 	},
@@ -493,7 +517,7 @@ const savePictures = async (userid, profile, gallery) => {
 				profile.length != 0
 			) {
 				await Image.save({ url: profile[0].path, profile: 1, user_id: userid })
-					.then(() => {})
+					.then(() => { })
 					.catch(async (error) => {
 						reject(new Error("Failed to save your profile picture !"));
 					});
@@ -506,7 +530,7 @@ const savePictures = async (userid, profile, gallery) => {
 			) {
 				for (let pic of gallery) {
 					await Image.save({ url: pic.path, profile: 0, user_id: userid })
-						.then(() => {})
+						.then(() => { })
 						.catch(async (error) => {
 							reject(new Error("Failed to save your profile picture !"));
 						});
@@ -610,15 +634,15 @@ const saveTags = async (userid, tags) => {
 	});
 };
 
-exports.setStatus = async ( req, res ) => {
+exports.setStatus = async (req, res) => {
 	const { userid } = req.body;
-	
+
 	try {
-		await User.setStatus( userid )
-		.then(() => {
-			return res.status(200).json({ success: true });
-		})
-	} catch ( e ) {
+		await User.setStatus(userid)
+			.then(() => {
+				return res.status(200).json({ success: true });
+			})
+	} catch (e) {
 		return res.status(400).json({
 			success: false,
 			error: "An error has occurred while change status, try later !",
@@ -626,15 +650,15 @@ exports.setStatus = async ( req, res ) => {
 	}
 }
 
-exports.getStatus = async ( req, res ) => {
+exports.getStatus = async (req, res) => {
 	const id = req.params.id;
-	
+
 	try {
-		await User.getStatus( id )
-		.then((status) => {
-			return res.status(200).json({ success: true, data: status });
-		});
-	} catch ( e ) {
+		await User.getStatus(id)
+			.then((status) => {
+				return res.status(200).json({ success: true, data: status });
+			});
+	} catch (e) {
 		return res.status(400).json({
 			success: false,
 			error: "An error has occurred while change status, try later !",
@@ -877,57 +901,57 @@ exports.editLocation = async (req, res) => {
 };
 
 // PUT - Like a user
-exports.like = async ( req, res ) => {
-	const id = parseInt( req.params.id );
+exports.like = async (req, res) => {
+	const id = parseInt(req.params.id);
 	const { userid, likedBySpecifiedUser } = req.body;
 
 	try {
 		// -> Create like 
-		await History.like( userid, id )
-		.then( async () => {
-			if ( likedBySpecifiedUser ) {
-				/**
-				 * -> Match users and create a chat
-				 */
-				await Match.match( userid, id );
-				await Message.createRoomChat( userid, id );
-				await Notification.create({ content: "Liked you back !", to: id, from: userid });
-			}
-			return res.status( 200 ).json({ success: true, message: "Liked successfully !" });
-		})
-		.catch( async (error) => {
-			// Delete Like created if an error had occurred
-			await History.unlike( userid, id );
-			return res.status( 400 ).json({ success: false, error: "Failed to like the specified user !" });
-		});
-	} catch ( e ) {
+		await History.like(userid, id)
+			.then(async () => {
+				if (likedBySpecifiedUser) {
+					/**
+					 * -> Match users and create a chat
+					 */
+					await Match.match(userid, id);
+					await Message.createRoomChat(userid, id);
+					await Notification.create({ content: "Liked you back !", to: id, from: userid });
+				}
+				return res.status(200).json({ success: true, message: "Liked successfully !" });
+			})
+			.catch(async (error) => {
+				// Delete Like created if an error had occurred
+				await History.unlike(userid, id);
+				return res.status(400).json({ success: false, error: "Failed to like the specified user !" });
+			});
+	} catch (e) {
 		// Delete Like created if an error had occurred
-		await History.unlike( userid, id );
+		await History.unlike(userid, id);
 		return res.status(400).json({ success: false, error: "An error has occurred while like the specified user, try later !" });
 	}
 }
 
 // PUT - Unlike a user
-exports.unlike = async ( req, res ) => {
-	const id = parseInt( req.params.id );
+exports.unlike = async (req, res) => {
+	const id = parseInt(req.params.id);
 	const { userid, matched } = req.body;
 
 	try {
-		await History.unlike( userid, id )
-		.then( async () => {
-			if ( matched ) {
-				/**
-				 * -> Unmatch users and delete chat between users
-				 */
-				await Match.unmatch( userid, id );
-				await Message.deleteRoomChar( userid, id );
-			}
-			return res.status( 200 ).json({ success: true, message: "Unliked successfully !" });
-		})
-		.catch((error) =>
-			res.status( 200 ).json({ success: false, error: "Failed to unlike the specified user !" })
-		)
-	} catch ( e ) {
+		await History.unlike(userid, id)
+			.then(async () => {
+				if (matched) {
+					/**
+					 * -> Unmatch users and delete chat between users
+					 */
+					await Match.unmatch(userid, id);
+					await Message.deleteRoomChar(userid, id);
+				}
+				return res.status(200).json({ success: true, message: "Unliked successfully !" });
+			})
+			.catch((error) =>
+				res.status(200).json({ success: false, error: "Failed to unlike the specified user !" })
+			)
+	} catch (e) {
 		return res.status(400).json({ success: false, error: "An error has occurred while unlike the specified user, try later !" });
 	}
 }

@@ -191,7 +191,7 @@ const findSuggestions = async (user, options) => {
 				"SELECT U.id, U.firstname, U.lastname, U.username, U.age, U.gender, U.fame, U.country, U.city,\
 				ROUND( ST_Distance_Sphere( point(?, ?), point(U.lat, U.lag) ) * 0.001 ) as `distance`,\
 				( SELECT count(users_tags.tag_id) from users_tags WHERE users_tags.user_id = U.id and users_tags.tag_id in (SELECT Tag_id from users_tags where users_tags.user_id = ?) ) AS `commonTags`,\
-				( SELECT url FROM images WHERE images.user_id = U.id AND images.profile = 1 ) AS `profile`\
+				( SELECT url FROM images WHERE images.user_id = U.id AND images.profile = 1 LIMIT 1 ) AS `profile`\
 				FROM `users` AS U LEFT JOIN `users_tags` AS UT ON U.id = UT.user_id\
 				WHERE U.id <> ?\
 				AND U.gender = ?\

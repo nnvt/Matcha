@@ -17,6 +17,8 @@ export const registerAction = async (registerData) => {
       config
     );
 
+    console.log(res);
+
     if (res) return res.data;
     return false;
   } catch (error) {
@@ -52,8 +54,8 @@ export const loginAction = async (loginData, dispatch) => {
       },
     });
 
-    if(res.data) return res?.data
- 
+    if (res.data) return res?.data
+
   } catch (error) {
 
     return error.response?.data;

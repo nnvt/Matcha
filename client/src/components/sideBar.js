@@ -41,27 +41,23 @@ const SideBar = () => {
   const [countUnread, setCount] = useState(0);
 
   useEffect(() => {
-    let isLoading = true;
-
     const getNotifs = async () => {
       try {
         const res = await notifyAction(state.token);
-
-        if (res.success && isLoading) {
+        if (res.success) {
           setNotifs(res.data);
           setCount(res.countUnread);
         } else {
-          if (isLoading) openMessageError(res.error);
+          openMessageError(res.error);
         }
       } catch (e) {
-        if (isLoading) openMessageError("Something is wrong !");
+        openMessageError("Something is wrong!");
       }
     };
+
     getNotifs();
-    // eslint-disable-next-line
-    return () => (isLoading = false);
-    // eslint-disable-next-line
-  }, [Notifs]);
+  }, []);
+
 
   useEffect(() => {
     socket.on("notifications", (data) => {
@@ -237,15 +233,15 @@ const SideBar = () => {
                   style={
                     item.seen
                       ? {
-                          backgroundColor: "white",
-                          cursor: "pointer",
-                          padding: "10px",
-                        }
+                        backgroundColor: "white",
+                        cursor: "pointer",
+                        padding: "10px",
+                      }
                       : {
-                          backgroundColor: "#fff1f0",
-                          cursor: "pointer",
-                          padding: "10px",
-                        }
+                        backgroundColor: "#fff1f0",
+                        cursor: "pointer",
+                        padding: "10px",
+                      }
                   }
                   onClick={() => {
                     handleClickNotif(item.id, item.username);

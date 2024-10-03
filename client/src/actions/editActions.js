@@ -22,6 +22,8 @@ export const infoUpdate = async (token, userInfos) => {
     return item.substring(1);
   });
 
+  console.log(editedData)
+
   try {
     const res = await axios.patch(
       "http://localhost:3001/api/users/edit/informations",

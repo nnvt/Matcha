@@ -28,8 +28,9 @@ import {
   ReloadOutlined,
   DislikeOutlined,
   LikeOutlined,
+  UserAddOutlined,
+  UserDeleteOutlined,
 } from "@ant-design/icons";
-
 import { Link } from "react-router-dom";
 import { Context } from "../Contexts/Context";
 import { openMessageError, openMessageSuccess } from "../helper/Verifications";
@@ -72,10 +73,12 @@ const UserInfo = (props) => {
     following: "",
     blocked: false,
     liked: false,
+    matched: false, // New state to track if users are matched
   });
   const [isModalVisible, setisModalVisible] = useState(false);
   const [modalName, setmodalName] = useState("");
   const [modalList, setmodalList] = useState([]);
+
   const getUser = async (username) => {
     const config = {
       headers: {
@@ -99,16 +102,13 @@ const UserInfo = (props) => {
     const loaduser = async () => {
       const res = await getUser(props.data.username);
 
+      console.log(res)
+
       if (res) {
         setUser({
           ...user,
-          profile: res.images.map((i) => {
-            return i.profile === 1 ? i.url : null;
-          })[0],
-          // eslint-disable-next-line
-          images: res.images.filter((i) => {
-            if (i.profile === 0) return i;
-          }),
+          profile: res.images.find((i) => i.profile === 1)?.url || "",
+          images: res.images.filter((i) => i.profile === 0),
           id: res.id,
           firstname: res.firstname,
           lastname: res.lastname,
@@ -127,6 +127,7 @@ const UserInfo = (props) => {
           following: res.following,
           blocked: res.blocked,
           liked: res.liked,
+          matched: res.matched,
         });
         socket.emit("isOnline", { userid: res.id });
       } else {
@@ -137,7 +138,6 @@ const UserInfo = (props) => {
     return () => {
       setUser({});
     };
-
     // eslint-disable-next-line
   }, []);
 
@@ -169,10 +169,10 @@ const UserInfo = (props) => {
       openMessageError(res.error);
     }
   };
+
   //* HANDLE UNLIKE
   const handlUnLikeUser = async (connid, id) => {
     const res = await UnLikeAction(state.token, id);
-
     message.loading("Loading...", 2);
     if (res.success) {
       socket.emit("notify", {
@@ -187,10 +187,63 @@ const UserInfo = (props) => {
     }
   };
 
+  //* HANDLE MATCH
+  const handleMatchUser = async () => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.token}`,
+        },
+      };
+      const res = await axios.post(
+        "http://localhost:3001/api/matchers/create",
+        { matcher: state.id, matched: user.id },
+        config
+      );
+
+      if (res.data.success) {
+        setUser({ ...user, matched: true });
+        openMessageSuccess("Matched successfully!");
+      } else {
+        openMessageError(res.data.error || "Failed to match the user.");
+      }
+    } catch (error) {
+      openMessageError("Error occurred while matching user.");
+    }
+  };
+
+  //* HANDLE UNMATCH
+  const handleUnmatchUser = async () => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.token}`,
+        },
+      };
+      const res = await axios.delete(
+        "http://localhost:3001/api/matchers/unmatch",
+        {
+          data: { matcher: state.id, matched: user.id },
+          ...config,
+        }
+      );
+
+      if (res.data.success) {
+        setUser({ ...user, matched: false });
+        openMessageSuccess("Unmatched successfully!");
+      } else {
+        openMessageError(res.data.error || "Failed to unmatch the user.");
+      }
+    } catch (error) {
+      openMessageError("Error occurred while unmatching user.");
+    }
+  };
+
   //* HANDLE REPORT
   const handlReportUser = async (id) => {
     const res = await ReportAction(state.token, id);
-
     message.loading("Loading...", 2);
     if (res.success) {
       socket.emit("report", { reported: id });
@@ -203,7 +256,6 @@ const UserInfo = (props) => {
   //* HANDLE BLOCK
   const handlBlockUser = async (id) => {
     const res = await blockAction(state.token, id);
-
     message.loading("Loading...", 2);
     if (res.success) {
       setUser({ ...user, blocked: true });
@@ -212,10 +264,10 @@ const UserInfo = (props) => {
       openMessageError(res.error);
     }
   };
+
   //* HANDLE UNBLOCK
   const handlUnBlockUser = async (id) => {
     const res = await unBlockAction(state.token, id);
-
     message.loading("Loading...", 2);
     if (res.success) {
       openMessageSuccess(res.message);
@@ -227,7 +279,6 @@ const UserInfo = (props) => {
 
   const openModal = async (name) => {
     let data;
-
     setmodalName(name);
     if ((data = await getModalData(name))) {
       setmodalList(data.data);
@@ -244,7 +295,6 @@ const UserInfo = (props) => {
       },
     };
 
-    // eslint-disable-next-line
     switch (name) {
       case "viewers":
         response = await axios.get(
@@ -264,7 +314,11 @@ const UserInfo = (props) => {
           config
         );
         break;
+      default:
+        response = null;
+        break;
     }
+
     if (response?.data.success) {
       return response?.data;
     } else {
@@ -275,6 +329,7 @@ const UserInfo = (props) => {
   const handleCancelModal = () => {
     setisModalVisible(false);
   };
+
   const menu = (
     <Menu>
       <Menu.Item onClick={() => handlReportUser(user.id)}>
@@ -283,182 +338,69 @@ const UserInfo = (props) => {
     </Menu>
   );
 
+
+  console.log(user)
+
   return (
     <Row>
       <Col xs={24} md={11} span={8}>
         <div id="side-container" style={{ marginBottom: "20px" }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Avatar
-              id="profile-picture"
+              id="profile-picture-1"
               size={150}
-              src={
-                user.profile ? "http://localhost:3001/api/" + user.profile : ""
-              }
+              src={user.profile ? "http://localhost:3001/api/" + user.profile : ""}
             />
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              padding: "10px",
-            }}>
-            <h3 style={{ fontSize: "15px", fontWeight: "bolder" }}>
-              {user.username}
-            </h3>
+          <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
+            <h3 style={{ fontSize: "15px", fontWeight: "bolder" }}>{user.username}</h3>
           </div>
           <div>
-            <Row
-              gutter={16}
-              style={{
-                marginBottom: "20px",
-                display: "flex",
-                justifyContent: "space-around",
-              }}>
+            <Row gutter={16} style={{ marginBottom: "20px", display: "flex", justifyContent: "space-around" }}>
               <Col xs={24} md={11}>
-                <Card
-                  style={{
-                    textAlign: "center",
-                    cursor: "pointer",
-                    borderRadius: "8px",
-                    display: "flex",
-                    justifyContent: "space-around",
-                  }}
-                  onClick={() => openModal(`followers`)}>
-                  <span style={{ color: "#a8a8a8", fontSize: "12px" }}>
-                    Followers
-                  </span>
-                  <Statistic
-                    value={user.followers}
-                    valueStyle={{ color: "#d9374b", fontSize: "16px" }}
-                  />
+                <Card style={{ textAlign: "center", cursor: "pointer", borderRadius: "8px", display: "flex", justifyContent: "space-around" }} onClick={() => openModal(`followers`)}>
+                  <span style={{ color: "#a8a8a8", fontSize: "12px" }}>Followers</span>
+                  <Statistic value={user.followers} valueStyle={{ color: "#d9374b", fontSize: "16px" }} />
                 </Card>
               </Col>
               <Col xs={24} md={11}>
-                <Card
-                  style={{
-                    textAlign: "center",
-                    cursor: "pointer",
-                    borderRadius: "8px",
-                  }}
-                  onClick={() => openModal(`following`)}>
-                  <span style={{ color: "#a8a8a8", fontSize: "12px" }}>
-                    Following
-                  </span>
-                  <Statistic
-                    value={user.following}
-                    valueStyle={{ color: "#d9374b", fontSize: "16px" }}
-                  />
+                <Card style={{ textAlign: "center", cursor: "pointer", borderRadius: "8px" }} onClick={() => openModal(`following`)}>
+                  <span style={{ color: "#a8a8a8", fontSize: "12px" }}>Following</span>
+                  <Statistic value={user.following} valueStyle={{ color: "#d9374b", fontSize: "16px" }} />
                 </Card>
               </Col>
             </Row>
-            <Modal
-              title={modalName}
-              footer={null}
-              visible={isModalVisible}
-              onCancel={handleCancelModal}>
+            <Modal title={modalName} footer={null} visible={isModalVisible} onCancel={handleCancelModal}>
               {modalList.length ? (
-                <List
-                  itemLayout="horizontal"
-                  dataSource={modalList}
-                  renderItem={(item) => (
-                    <List.Item>
-                      {item ? (
-                        <List.Item.Meta
-                          avatar={
-                            <Avatar
-                              size={50}
-                              src={"http://localhost:3001/api/" + item.profile}
-                            />
-                          }
-                          title={
-                            <>
-                              {item.gender === "male" ? (
-                                <ManOutlined style={{ marginRight: "5px" }} />
-                              ) : (
-                                <WomanOutlined style={{ marginRight: "5px" }} />
-                              )}
-                              <Link to={`/profile/${item.username}`}>
-                                {item.firstname} {item.lastname}
-                              </Link>
-                              <span>, {item.age}</span>
-                            </>
-                          }
-                          description={
-                            <Tooltip title={`${item.fame}% Popularity`}>
-                              <Progress
-                                strokeColor={{
-                                  "0%": "#d3ea13",
-                                  "100%": "#68d083",
-                                }}
-                                percent={item.fame}
-                                showInfo={false}></Progress>
-                            </Tooltip>
-                          }
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                "No users"
-              )}
+                <List itemLayout="horizontal" dataSource={modalList} renderItem={(item) => (
+                  <List.Item>
+                    {item ? (
+                      <List.Item.Meta
+                        avatar={<Avatar size={50} src={"http://localhost:3001/api/" + item.profile.replace(/\\/g, "/")} />}
+                        title={<><Link to={`/profile/${item.username}`}>{item.firstname} {item.lastname}</Link></>}
+                        description={<Tooltip title={`${item.fame}% Popularity`}><Progress strokeColor={{ "0%": "#d3ea13", "100%": "#68d083" }} percent={item.fame} showInfo={false} /></Tooltip>}
+                      />
+                    ) : ("")}
+                  </List.Item>
+                )} />
+              ) : ("No users")}
             </Modal>
           </div>
-
           <div id="popularity">
             <Tooltip title={`${user.fame}% Popularity`}>
-              <Progress
-                strokeColor={{
-                  "0%": "#d3ea13",
-                  "100%": "#68d083",
-                }}
-                percent={user.fame}
-                showInfo={false}></Progress>
+              <Progress strokeColor={{ "0%": "#d3ea13", "100%": "#68d083" }} percent={user.fame} showInfo={false} />
             </Tooltip>
           </div>
           <div id="location">
-            <Tag
-              icon={
-                <EnvironmentOutlined />
-              }>{`${user.city}, ${user.country}`}</Tag>
+            <Tag icon={<EnvironmentOutlined />}>{`${user.city}, ${user.country}`}</Tag>
           </div>
           <div id="gender-interest">
-            <Tag
-              id="gender"
-              icon={
-                user.gender === "male" ? (
-                  <ManOutlined />
-                ) : user.gender === "female" ? (
-                  <WomanOutlined />
-                ) : (
-                  "🏳️‍🌈"
-                )
-              }
-              color="#55acee">
-              {user.gender}
-            </Tag>
+            <Tag id="gender" icon={user.gender === "male" ? <ManOutlined /> : user.gender === "female" ? <WomanOutlined /> : "🏳️‍🌈"} color="#55acee">{user.gender}</Tag>
             <p>Looking for</p>
-            <Tag
-              id="Interest"
-              icon={
-                user.looking === "male" ? (
-                  <ManOutlined />
-                ) : user.looking === "female" ? (
-                  <WomanOutlined />
-                ) : (
-                  "🏳️‍🌈"
-                )
-              }
-              color="#ff69b4">
-              {user.looking}
-            </Tag>
+            <Tag id="Interest" icon={user.looking === "male" ? <ManOutlined /> : user.looking === "female" ? <WomanOutlined /> : "🏳️‍🌈"} color="#ff69b4">{user.looking}</Tag>
           </div>
           <div id="tags">
-            {user.tags?.map((tag, index) => (
-              <Tag key={index}>{tag.name}</Tag>
-            ))}
+            {user.tags?.map((tag, index) => (<Tag key={index}>{tag.name}</Tag>))}
           </div>
         </div>
       </Col>
@@ -466,64 +408,24 @@ const UserInfo = (props) => {
         <div id="main-container">
           <div id="name-div">
             <span id="fullname">{`${user.firstname} ${user.lastname}`}</span>
-            <span
-              id="online-dot"
-              style={
-                status.online
-                  ? { backgroundColor: "green" }
-                  : { backgroundColor: "#bfc1bf" }
-              }></span>
-            <span id="online-status">
-              {status.online
-                ? "Online"
-                : "Active " + moment(status.status).fromNow()}
-            </span>
+            <span id="online-dot" style={status.online ? { backgroundColor: "green" } : { backgroundColor: "#bfc1bf" }}></span>
+            <span id="online-status">{status.online ? "Online" : "Active " + moment(status.status).fromNow()}</span>
             <div style={{ marginLeft: "auto" }}>
-              <Button
-                shape="circle"
-                style={{
-                  marginRight: "5px",
-                  borderColor: "#d9374b",
-                }}>
-                {user.liked ? (
-                  <DislikeOutlined
-                    twoToneColor="#d9374b"
-                    onClick={() => handlUnLikeUser(state.id, user.id)}
-                  />
-                ) : (
-                  <LikeOutlined
-                    twoToneColor="#d9374b"
-                    onClick={() => handlLikeUser(state.id, user.id)}
-                  />
-                )}
+              <Button shape="circle" style={{ marginRight: "5px", borderColor: "#d9374b" }}>
+                {user.liked ? <DislikeOutlined onClick={() => handlUnLikeUser(state.id, user.id)} /> : <LikeOutlined onClick={() => handlLikeUser(state.id, user.id)} />}
               </Button>
               <Dropdown overlay={menu}>
-                <Button
-                  shape="circle"
-                  style={{
-                    marginRight: "5px",
-                    borderColor: "#d9374b",
-                  }}
-                  onClick={(e) => e.preventDefault()}>
-                  <WarningTwoTone twoToneColor="#d9374b" />
-                </Button>
+                <Button shape="circle" style={{ marginRight: "5px", borderColor: "#d9374b" }} onClick={(e) => e.preventDefault()}><WarningTwoTone twoToneColor="#d9374b" /></Button>
               </Dropdown>
-
-              <Button
-                shape="circle"
-                style={{
-                  marginRight: "5px",
-                  borderColor: "#d9374b",
-                }}>
-                {user.blocked === true ? (
-                  <ReloadOutlined
-                    twoToneColor="#d9374b"
-                    onClick={() => handlUnBlockUser(user.id)}
-                  />
-                ) : (
-                  <StopOutlined onClick={() => handlBlockUser(user.id)} />
-                )}
+              <Button shape="circle" style={{ marginRight: "5px", borderColor: "#d9374b" }}>
+                {user.blocked === true ? <ReloadOutlined onClick={() => handlUnBlockUser(user.id)} /> : <StopOutlined onClick={() => handlBlockUser(user.id)} />}
               </Button>
+              {/* Match and Unmatch Buttons */}
+              {user.matched ? (
+                <Button shape="circle" style={{ borderColor: "#d9374b" }} onClick={handleUnmatchUser} icon={<UserDeleteOutlined twoToneColor="#d9374b" />} />
+              ) : (
+                <Button shape="circle" style={{ borderColor: "#d9374b" }} onClick={handleMatchUser} icon={<UserAddOutlined twoToneColor="#d9374b" />} />
+              )}
             </div>
           </div>
           <Divider />
@@ -534,12 +436,19 @@ const UserInfo = (props) => {
           <div>
             <span id="pictures-title">Pictures</span>
             <div id="profile-pictures">
-              {user.images?.map((img, index) => (
-                <Image
-                  key={index}
-                  src={img?.url}
-                  style={{ borderRadius: "8px" }}></Image>
-              ))}
+              {user.images?.map((img, index) => {
+                const normalizedUrl = img?.url.replace(/\\/g, "/");
+                console.log("Normalized Image URL:", normalizedUrl);
+                return (
+                  <Image
+                    key={index}
+                    src={`http://localhost:3001/api/${img?.url}`}
+                    style={{ borderRadius: "8px" }}
+                    onError={(e) => {
+                    }}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>

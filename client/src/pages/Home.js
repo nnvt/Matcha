@@ -63,7 +63,6 @@ const Home = () => {
           }),
         });
       }
-      //* Set suggestions list
       setUsers(matchedUsers);
       pages = Math.round(matchedUsers.length / limit_p);
       setCountpage(pages ? pages : 1);
@@ -309,15 +308,15 @@ const Home = () => {
         </Col>
         {isSearching
           ? searchedUsers.slice(limit - limit_p, limit).map((user) => (
-              <Col key={user.id} xxl={4} xs={24} sm={12} lg={6} span={6}>
-                <UserCard data={user} />
-              </Col>
-            ))
+            <Col key={user.id} xxl={4} xs={24} sm={12} lg={6} span={6}>
+              <UserCard data={user} />
+            </Col>
+          ))
           : users.slice(limit - limit_p, limit).map((user) => (
-              <Col key={user.id} xxl={4} xs={24} sm={12} lg={6} span={6}>
-                <UserCard data={user} />
-              </Col>
-            ))}
+            <Col key={user.id} xxl={4} xs={24} sm={12} lg={6} span={6}>
+              <UserCard data={user} />
+            </Col>
+          ))}
       </Row>
       <Row
         type="flex"

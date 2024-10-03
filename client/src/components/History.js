@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { List, Avatar, Spin, Tag } from "antd";
+import { Link } from "react-router-dom"; // Import Link component
 import { Context } from "../Contexts/Context";
 import { historyAction } from "../actions/editActions";
 import { EnvironmentOutlined } from "@ant-design/icons";
@@ -27,21 +28,15 @@ export const History = () => {
         renderItem={(item) => (
           <List.Item key={item.id}>
             <List.Item.Meta
-              avatar={
-                <Avatar src={"http://localhost:3001/api/" + item.profile} />
-              }
+              avatar={<Avatar src={"http://localhost:3001/api/" + item.profile} />}
               title={
-                // eslint-disable-next-line
-                <a href="">
-                  {item.firstname} {item.lastname}
-                </a>
+                // Use Link to navigate to the user's profile page
+                <Link to={`/profile/${item.username}`}>{item.firstname} {item.lastname}</Link>
               }
               description={item.age + " y.o"}
             />
             <div id="location">
-              <Tag
-                icon={<EnvironmentOutlined />}
-              >{`${item.city}, ${item.country}`}</Tag>
+              <Tag icon={<EnvironmentOutlined />}>{`${item.city}, ${item.country}`}</Tag>
             </div>
           </List.Item>
         )}
