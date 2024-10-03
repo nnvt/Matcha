@@ -1,16 +1,10 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
-import { isLogin } from "../helper/Verifications";
+import { Navigate } from "react-router-dom";
+import { isLogin } from "../utils/Verifications";
 
-const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                isLogin() ? <Redirect to="/home" /> : <Component {...props} />
-            }
-        />
-    );
+// Sử dụng `children` để bao bọc các components cần render
+const PublicRoute = ({ children, restricted }) => {
+    return isLogin() && restricted ? <Navigate to="/home" /> : children;
 };
 
 export default PublicRoute;

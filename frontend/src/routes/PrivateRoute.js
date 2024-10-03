@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Navigate } from "react-router-dom";
 import { checkTokenAction } from "../api/userActions.js";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -33,8 +33,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                     // If logged in, render the protected component
                     <Component {...props} />
                 ) : (
-                    // If not logged in, redirect to login
-                    <Redirect to="/login" />
+                    // If not logged in, Navigate to login
+                    <Navigate to="/login" />
                 )
             }
         />

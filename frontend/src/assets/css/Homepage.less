@@ -1,11 +1,8 @@
 @import "~antd/dist/antd.css";
 @import "global.less";
 
-// body,
-// html,
-// #root {
-//   height: 100% !important;
-// }
+@default-linear-gradient: linear-gradient(137.59deg, #FF6F91 -4.02%, #FF5677 50%, #FF3D6B 96.96%);
+
 
 .logo {
     width: 150px;
@@ -47,15 +44,24 @@
     margin: 12% 6%;
 }
 
-// .intro {
-//   display: flex;
-//   align-items: center;
-//   height: 815px;
-// }
+
+
 .intro>div:nth-of-type(1) {
     height: 90vh;
 }
 
 .ant-carousel {
     height: 100% !important;
+}
+
+.ant-btn-dashed {
+    color: #d9374b;
+    border-color: #d9374b;
+    background-color: white;
+}
+
+.ant-btn-ghost {
+    color: white;
+    border-color: white;
+    background-color: transparent;
 }

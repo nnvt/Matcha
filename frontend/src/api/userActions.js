@@ -1,5 +1,6 @@
 import axios from '../utils/customize.axios';
-import { SUCCESS, FAILED, COMPLETE, USER_AUTH, LOGOUT } from './actionTypes';
+import { SUCCESS, FAILED, COMPLETE, USER_AUTH, LOGOUT } from '../assets/constant.js';
+import { socketConn as socket } from '../utils/sockets.js';
 
 // Register Action
 export const registerAction = async (registerData) => {
