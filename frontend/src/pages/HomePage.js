@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, Carousel } from "antd";
 import logo from "../assets/logo/logo.svg";
-import "../assets/css/HomePage.less";
+import "../assets/css/Homepage.less";
 import About from "../components/About";
 import Begin from "../components/Begin";
 import 'line-awesome/dist/line-awesome/css/line-awesome.min.css';
