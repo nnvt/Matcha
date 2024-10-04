@@ -12,10 +12,10 @@
 </head>
 
 <body>
-    <div class="user-infor-container">
-        <form method="post" action="/user/create-user">
-            <div class="container">
-                <div class="row">
+    <div class="container">
+        <div class="row">
+            <div class="user-infor-container">
+                <form method="post" action="/user/create-user">
                     <div class="mb-3 mt-3 col-6">
                         <label for="email" class="form-label">Email address</label>
                         <input type="email" class="form-control" id="email" name="email" required>
@@ -30,14 +30,62 @@
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
+                    <div class="col-6"></div>
+                    <div class="mb-3 col-6">
+                        <label for="firstname" class="form-label">Firstname</label>
+                        <input type="firstname" class="form-control" id="firstname" name="firstname" required>
+                    </div>
+                    <div class="col-6"></div>
+                    <div class="mb-3 col-6">
+                        <label for="lastname" class="form-label">Lastname</label>
+                        <input type="lastname" class="form-control" id="lastname" name="lastname" required>
+                    </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
 
-                </div>
-            </div>
-        </form>
 
+                </form>
+
+            </div>
+            <div class="table-user mt-3">
+                <h3>Table user:</h3>
+                <table class="table table-hover table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Username</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% userList.forEach(function(user,index){ %>
+                            <tr>
+                                <th scope="row">
+                                    <%=index+1%>
+                                </th>
+                                <td>
+                                    <%= user.email%>
+                                </td>
+                                <td>
+                                    <%= user.username%>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-warning col-6">Edit</button>
+                                    <form action="user/delete-user/<%= user.id %>" method="post">
+                                        <button class="btn btn-danger col-6" type="submit">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 
