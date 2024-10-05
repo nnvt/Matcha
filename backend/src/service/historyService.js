@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models';
 
 const findLike = async (liker, liked) => {
     try {
@@ -36,7 +36,7 @@ const getVisitsHistory = async (userid) => {
                     required: false
                 }]
             }],
-            group: ['db.history.visited']
+            group: ['db.history.visited']   
         });
 
         return result;
@@ -196,6 +196,33 @@ const unlike = async (liker, liked) => {
     }
 }
 
+const getUserViewers = async (userid) => {
+    try {
+        const result = await db.history.findAll({
+            where: {
+                type: 'view',  // Điều kiện 'view' cho lịch sử lượt xem
+                visited: userid  // Người dùng được xem là 'userid'
+            },
+            include: [{
+                model: db.users,  // Liên kết với bảng 'users'
+                as: 'visitor',  // Alias cho 'visitor', người đã xem
+                attributes: ['id', 'firstname', 'lastname', 'username', 'gender', 'city', 'country', 'age', 'fame'],  // Các trường cần lấy từ bảng 'users'
+                include: [{
+                    model: db.images,  // Liên kết với bảng 'images' để lấy ảnh đại diện
+                    as: 'profile',  // Alias cho ảnh đại diện
+                    attributes: ['url'],  // Chỉ lấy trường 'url' của ảnh
+                    where: { profile: true },  // Điều kiện lấy ảnh đại diện
+                    required: false  // Không bắt buộc phải có ảnh đại diện
+                }]
+            }],
+            distinct: true  // Đảm bảo kết quả không trùng lặp
+        });
+
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
 module.exports = {
-    findLike, getVisitsHistory, getCountViews, getCountFollowing, getCountFollowers, getUserFollowers, getUserFollowing, like, view, unlike
+    findLike, getVisitsHistory, getCountViews, getCountFollowing, getCountFollowers, getUserFollowers, getUserFollowing, getUserViewers, like, view, unlike
 }
