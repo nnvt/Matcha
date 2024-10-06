@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // users has many Tags (through UserTag)
       users.belongsToMany(models.tags, { through: models.usertags, foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
       // users has many Images
@@ -52,11 +51,11 @@ module.exports = (sequelize, DataTypes) => {
     looking: DataTypes.STRING,
     birthday: DataTypes.DATE,
     age: DataTypes.INTEGER,
+    fame: DataTypes.FLOAT(5, 2),
     lat: DataTypes.DOUBLE,
     lag: DataTypes.DOUBLE,
     country: DataTypes.STRING,
     city: DataTypes.STRING,
-    fame: DataTypes.FLOAT(5, 2),
     verified: DataTypes.TINYINT(1),
     status: DataTypes.DATE,
     reports: DataTypes.INTEGER,
