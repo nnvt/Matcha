@@ -33,7 +33,7 @@ const sendMail = async (email, subject, templateName, replacements, attachments 
 
     // Define the email options
     const mailOptions = {
-      from: `"Matcha Team" <${process.env.GMAIL_USER}>`,
+      from: `"nhom chim bu" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: subject,
       html: htmlToSend,
@@ -66,7 +66,7 @@ const sendConfirmationMail = async (user) => {
       cid: "unique@account.confirmation",
     },
   ];
-  const subject = "[Matcha] Verify your email address";
+  const subject = "[nhom chim bu] Verify your email address";
   return await sendMail(user.email, subject, "verify", replacements, attachments);
 };
 
@@ -86,7 +86,7 @@ const sendSuccessActivationMail = async (user) => {
       cid: "unique@account.verified",
     },
   ];
-  const subject = "[Matcha] Account verified";
+  const subject = "[nhom chim bu] Account verified";
   return await sendMail(user.email, subject, "accountverified", replacements, attachments);
 };
 
@@ -106,7 +106,7 @@ const sendRecoveryMail = async (user) => {
       cid: "unique@reset-password",
     },
   ];
-  const subject = "[Matcha] Password Recovery";
+  const subject = "[nhom chim bu] Password Recovery";
   return await sendMail(user.email, subject, "resetpassword", replacements, attachments);
 };
 
