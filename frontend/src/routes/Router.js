@@ -15,7 +15,7 @@ const Routing = () => {
                 <Routes>
                     {/* Public Routes */}
                     <Route path="/" element={<PublicRoute restricted={false}><HomePage /> </PublicRoute>} />
-                    <Route path="/" element={<PublicRoute restricted={false}><Login /> </PublicRoute>} />
+                    <Route path="/login" element={<PublicRoute restricted={false}><Login /> </PublicRoute>} />
                     {/* Private Routes */}
                     {/* Other Routes */}
                 </Routes>

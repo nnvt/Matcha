@@ -6,7 +6,7 @@ import "../assets/css/login.less";
 import { Context } from "../Reducers/Context";
 import React, { useContext } from "react";
 import { loginAction } from "../api/userActions";
-import { useNavigate, Link } from "react-router-dom"; // Thêm Link vào đây
+import { useNavigate, Link } from "react-router-dom";
 import { openMessageSuccess, openMessageError } from "../utils/Verifications";
 
 const { Title } = Typography;
@@ -58,17 +58,7 @@ const Login = () => {
                 <div id="right-container">
                     <img id="logo" alt="logo" src={logo}></img>
                     <div id="oauth-div">
-                        {/* <img alt="google" src={googleSvg} /> */}
-                        {/* <Form.Item>
-              <GoogleLogin
-                clientId="86149681783-ovep8qluq3qdkd4j2ts6iq2oagr9hd4m.apps.googleusercontent.com"
-                buttonText="Log in with Google"
-                onSuccess={responseGoogle}
-                isSignedIn={true}
-              />
-            </Form.Item> */}
                     </div>
-                    {/* <Divider plain>OR</Divider> */}
                     <Form
                         name="login"
                         id="form"
