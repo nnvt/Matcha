@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // eslint-disable-next-line
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import Login from "../pages/Login";
 
 const Routing = () => {
     return (
@@ -14,6 +15,7 @@ const Routing = () => {
                 <Routes>
                     {/* Public Routes */}
                     <Route path="/" element={<PublicRoute restricted={false}><HomePage /> </PublicRoute>} />
+                    <Route path="/" element={<PublicRoute restricted={false}><Login /> </PublicRoute>} />
                     {/* Private Routes */}
                     {/* Other Routes */}
                 </Routes>
