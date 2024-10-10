@@ -2,6 +2,7 @@ import { Row, Col, Form, Input, Button, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import logo from "../assets/logo/logo.svg";
 import loginSvg from "../assets/logo/login.svg";
+import cupid from "../assets/audio/cupid.m4a";
 import "../assets/css/login.less";
 import { Context } from "../Reducers/Context";
 import React, { useContext } from "react";
@@ -14,7 +15,12 @@ const { Title } = Typography;
 const Login = () => {
     let navigate = useNavigate();
     const { dispatch } = useContext(Context);
-    let audio = new Audio("/cupid.mp3");
+    let audio = new Audio(cupid);
+
+    const checks = {
+        username: [{ required: true, message: "Please enter your username!" }],
+        password: [{ required: true, message: "Please enter your password!" }],
+    };
 
     const submit = async (values) => {
         const res = await loginAction(values, dispatch);
@@ -26,6 +32,7 @@ const Login = () => {
                 audio.play();
             } else {
                 navigate("/home");
+                audio.play();
             }
 
             openMessageSuccess(res.message);
@@ -34,10 +41,7 @@ const Login = () => {
         }
     };
 
-    const rules = {
-        username: [{ required: true, message: "Please enter your username!" }],
-        password: [{ required: true, message: "Please enter your password!" }],
-    };
+
 
     return (
         <Row gutter={0}>
@@ -66,11 +70,11 @@ const Login = () => {
                         onFinish={submit}
                     >
                         <div id="add-margin-bottom">
-                            <Form.Item name="username" rules={rules.username}>
+                            <Form.Item name="username" checks={checks.username}>
                                 <Input prefix={<UserOutlined />} placeholder="Username" />
                             </Form.Item>
                         </div>
-                        <Form.Item name="password" rules={rules.password}>
+                        <Form.Item name="password" checks={checks.password}>
                             <Input.Password
                                 autoComplete="on"
                                 prefix={<LockOutlined />}
