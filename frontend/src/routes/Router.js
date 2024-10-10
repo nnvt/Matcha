@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 const Routing = () => {
     return (
@@ -16,6 +17,7 @@ const Routing = () => {
                     {/* Public Routes */}
                     <Route path="/" element={<PublicRoute restricted={false}><HomePage /> </PublicRoute>} />
                     <Route path="/login" element={<PublicRoute restricted={false}><Login /> </PublicRoute>} />
+                    <Route path="/register" element={<PublicRoute restricted={false}><Register /> </PublicRoute>} />
                     {/* Private Routes */}
                     {/* Other Routes */}
                 </Routes>
