@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 const { fileFilter, deleteImage } = require("../validators/image.validators");
 const { msgsMulterError } = require("../helpers/helpers");
 const jwt = require("jsonwebtoken");

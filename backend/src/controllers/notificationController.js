@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 
 exports.loadNotifs = async (req, res) => {
     const { userid } = req.body;

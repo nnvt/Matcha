@@ -1,8 +1,8 @@
 import express from 'express';
-import authMiddleware from "../middlewares/authMiddleware";
-import userMiddleware from "../middlewares/userMiddleware";
-import notificationsController from "../controllers/notificationController";
-import notificationsMiddleware from "../middlewares/notificationMiddleware";
+import authMiddleware from "../middleware/authMiddleware.js";
+import userMiddleware from "../middleware/userMiddleware.js";
+import notificationsController from "../controllers/notificationController.js";
+import notificationsMiddleware from "../middleware/notificationMiddleware.js";
 
 const router = express.Router();
 

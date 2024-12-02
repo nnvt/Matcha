@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 
 exports.validateNotif = async (req, res, next) => {
     const id = req.params.id;

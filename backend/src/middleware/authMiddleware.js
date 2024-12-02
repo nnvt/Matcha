@@ -1,5 +1,5 @@
-import db from '../models/index';
-const jwt = require("jsonwebtoken");
+import db from '../models/index.js';
+import jwt from 'jsonwebtoken';
 
 const validateHeader = (AHeader) => {
     if (!AHeader) return new Error("No authorization header found!");
@@ -8,7 +8,7 @@ const validateHeader = (AHeader) => {
     return null;
 }
 
-exports.isAuth = async (req, res, next) => {
+const isAuth = async (req, res, next) => {
     const AHeader = req.headers.authorization;
 
     const err = validateHeader(AHeader);
@@ -20,7 +20,7 @@ exports.isAuth = async (req, res, next) => {
 
     try {
         const payload = jwt.verify(token, process.env.JWT_PKEY);
-        const user = await db.users.findOne({ id: payload.id });
+        const user = await db.users.findOne({ where: { id: payload.id } });
 
         if (!user) {
             return res.status(401).json({ success: false, error: "Must login to perform this action!" });
@@ -32,3 +32,5 @@ exports.isAuth = async (req, res, next) => {
         return res.status(403).json({ success: false, error: "Can't login, try later!" });
     }
 }
+
+export { isAuth };

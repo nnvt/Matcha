@@ -1,7 +1,45 @@
 import express from 'express';
-import authMiddleware from "../middlewares/authMiddleware";
-import userMiddleware from '../middlewares/userMiddleware';
-import userController from '../controllers/userController';
+import { isAuth } from "../middleware/authMiddleware.js";
+import { userMiddleware } from "../middleware/userMiddleware.js";
+
+const {
+  register,
+  registerGoogle,
+  verify,
+  resetPassword,
+  newPassword,
+  login,
+  authGoogle,
+  findUserById,
+  findUserByUsername,
+  completeInfos,
+  isProfileCompleted,
+  editInfos,
+  changepassword,
+  editLocation,
+  like,
+  likedBack,
+  unlike,
+  isMatch,
+  block,
+  unblock,
+  report
+} = userMiddleware;
+import {
+  profileInfos,
+editUser,
+verifyToken,
+browsing,
+findUserById,
+findUserByUsername,
+isinfoscompleted,
+getStatus,
+register,
+registerGoogle,
+login,
+logout,
+authGoogle
+} from '../controllers/userController.js';
 
 const router = express.Router();
 
@@ -45,3 +83,5 @@ router
   .post("/edit", userController.editUser)  // For editing user info
 
 export default router;
+
+

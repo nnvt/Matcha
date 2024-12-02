@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 
 exports.deletePic = async (req, res, next) => {
     const { userid } = req.body;

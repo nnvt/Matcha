@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 
 exports.tagsList = async (req, res) => {
     try {

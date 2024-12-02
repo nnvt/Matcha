@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 const {
 	validateRegisterData,
 	validateUniqueFields,
@@ -478,8 +478,7 @@ const report = async (req, res, next) => {
 		return res.status(400).json({ success: false, error: "An error has occurred while validating the specified user, try later!" });
 	}
 }
-
-module.exports = {
+export const userMiddleware = {
 	register,
 	registerGoogle,
 	verify,
@@ -501,4 +500,4 @@ module.exports = {
 	block,
 	unblock,
 	report
-}
+  };

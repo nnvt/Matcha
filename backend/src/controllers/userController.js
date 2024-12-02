@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 const { fileFilter } = require("../utils/imageValidator");
 const {
     completeInfosValidation,

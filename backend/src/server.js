@@ -1,26 +1,24 @@
 import express from "express";
-import configViewEngine from "./config/viewEngine";
-import initWebRoutes from "./routes/web";
+import configViewEngine from "./config/viewEngine.js";
+import initWebRoutes from "./routes/index.js";
 import bodyParser from "body-parser";
-require('dotenv').config();
-import connection from "./config/connectDB";
+import dotenv from 'dotenv';
+import connection from "./config/connectDB.js";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-//config viewengine
 configViewEngine(app);
 
-//config body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//test connection db
 connection();
 
-//init web routes
 initWebRoutes(app);
 
 app.listen(PORT, () => {
-    console.log("web running on:" + PORT);
-})
+    console.log(`Web running on: ${PORT}`);
+});
