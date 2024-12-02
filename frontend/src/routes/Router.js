@@ -10,6 +10,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ForgotPass from "../pages/ForgotPass";
 import Policy from "../components/Policy";
+import CompleteProfile from "../pages/CompleteProfile";
 
 const Routing = () => {
     return (
@@ -24,6 +25,8 @@ const Routing = () => {
                     <Route path="/policy" element={<PublicRoute restricted={false}><Policy /> </PublicRoute>} />
 
                     {/* Private Routes */}
+                    <Route path="/steps" element={<PrivateRoute restricted={false}><CompleteProfile /> </PrivateRoute>} />
+                    <Route path="/steps" element={<PrivateRoute restricted={false}><CompleteProfile /> </PrivateRoute>} />
                     {/* Other Routes */}
                 </Routes>
             </Router>
