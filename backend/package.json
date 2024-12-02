@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "backend",
   "version": "1.0.0",
   "description": "",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/nnvt/hospital_database_management_system#readme",
   "dependencies": {
+    "backend": "file:",
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
@@ -31,10 +33,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@babel/node": "^7.25.0",
-    "@babel/preset-env": "^7.25.4",
-    "nodemon": "^3.1.7",
-    "sequelize": "^6.37.3",
-    "sequelize-cli": "^6.6.2"
+    "@babel/node": "^7.25.2",
+    "@babel/preset-env": "^7.25.2",
+    "nodemon": "^2.0.15"
   }
 }

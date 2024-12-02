@@ -1,4 +1,4 @@
-const db = require('../models/index');
+import db from '../models/index';
 
 // Tìm một tin nhắn cụ thể trong chat
 const findMessage = async (message, user_id, chat_id) => {

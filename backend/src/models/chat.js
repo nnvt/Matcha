@@ -1,7 +1,4 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+import { createRequire } from 'module';
 module.exports = (sequelize, DataTypes) => {
   class chat extends Model {
     /**

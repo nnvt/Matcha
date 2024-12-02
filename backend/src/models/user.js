@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class users extends Model {
     /**
@@ -25,21 +24,15 @@ module.exports = (sequelize, DataTypes) => {
       users.hasMany(models.history, { as: 'Visited', foreignKey: 'visited', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
       // users has many Matchers (self-association)
-      users.hasMany(models.matchers, { as: 'Matcher', foreignKey: 'matcher', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-      users.hasMany(models.matchers, { as: 'Matched', foreignKey: 'matched', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+      users.hasMany(models.matchers, { foreignKey: 'matcher', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+      users.hasMany(models.matchers, { foreignKey: 'matched', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
-      // Chat association
-      users.belongsToMany(users, { as: 'Chat', through: models.chat, foreignKey: 'user_id1', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-
-      // users has many Messages
-      users.hasMany(models.messages, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-
-      // Notification association
-      users.hasMany(models.notifications, { as: 'NotificationsReceived', foreignKey: 'to_user', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-      users.hasMany(models.notifications, { as: 'NotificationsSent', foreignKey: 'from_user', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-
+      // users has many Notifications
+      users.hasMany(models.notifications, { as: 'ToUser', foreignKey: 'to_user', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+      users.hasMany(models.notifications, { as: 'FromUser', foreignKey: 'from_user', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     }
   }
+  
   users.init({
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING,
@@ -66,5 +59,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'users',
   });
+
   return users;
 };
