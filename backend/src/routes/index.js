@@ -1,11 +1,11 @@
 import express from 'express';
-import usersRoutes from './user.routes.js';
-import tagsRoutes from './tags.routes.js';
-import imageRoutes from './images.routes.js';
-import historyRoutes from './history.routes.js';
-import matchersRoutes from './matchers.routes.js';
-import chatRoutes from '../routes/chat.routes.js';
-import notificationsRoutes from './notification.routes.js';
+import usersRoutes from './userRoutes.js';
+import tagsRoutes from './tagsRoutes.js';
+import imageRoutes from './imagesRoutes.js';
+import historyRoutes from './historyRoutes.js';
+import matchersRoutes from './matchersRoutes.js';
+import chatRoutes from '../routes/chatRoutes.js';
+import notificationsRoutes from './notificationRoutes.js';
 
 const router = express.Router();
 
