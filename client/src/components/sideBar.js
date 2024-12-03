@@ -56,7 +56,7 @@ const SideBar = () => {
     };
 
     getNotifs();
-  }, []);
+  }, [state.token]);
 
 
   useEffect(() => {
