@@ -3,7 +3,7 @@ dotenv.config();
 
 const mysql = require('mysql');
 // config database
-import config from '../config/config.js';
+const config = require('./config.js')[process.env.NODE_ENV || 'development'];
 
 const pool = mysql.createPool(config);
 

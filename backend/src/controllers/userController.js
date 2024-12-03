@@ -53,7 +53,7 @@ exports.register = async (req, res) => {
 
         return res.status(201).json({ success: true, message: "Successful registration!" });
     } catch (e) {
-        return res.status(400).json({ success: false, error: "An error occurred while creating your account, try later!" });
+        return res.status(400).json({ success: false, error: "An error occurred while creating your account, try later !" });
     }
 };
 
@@ -809,7 +809,7 @@ exports.editInfos = async (req, res) => {
     } = await filterbody(req.body);
 
     try {
-        const user = await db.users.findOne({ id: userid });
+        const user = await db.users.findOne({ where: { id: userid } });
 
         // Edit user tags
         await editUserTags(userid, tags || user.tags);

@@ -14,6 +14,8 @@ import connectDB from './config/connectDB.js';
 // Create an app
 const app = express();
 
+connectDB();
+
 app.use(express.static(path.join(__dirname, "/build/")));
 
 app.get("/", (req, res) => {

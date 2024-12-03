@@ -18,10 +18,11 @@ const register = async (req, res, next) => {
 	let error;
 
 	try {
-		const body = req.body = { firstname, lastname, email, username, password, confirmpassword } = await filterbody(req.body);
+		// Gọi hàm filterBody để lọc dữ liệu từ req.body
+		const body = await filterbody(req.body);
 
 		if (!body.firstname || !body.lastname || !body.email || !body.username || !body.password || !body.confirmpassword) {
-			return res.status(400).json({ success: false, error: "Invalid data provided !" });
+			return res.status(400).json({ success: false, error: "Invalid data provided!" });
 		} else if (error = validateRegisterData(body)) {
 			return res.status(400).json({ success: false, error: error.message });
 		} else {
@@ -30,9 +31,10 @@ const register = async (req, res, next) => {
 				.catch((error) => res.status(400).json({ success: false, error: error.message }));
 		}
 	} catch (e) {
-		return res.status(400).json({ success: false, error: "An error has occurred while validate account informations, try later !" });
+		return res.status(400).json({ success: false, error: "An error has occurred while validating account information, try later hello!" });
 	}
-}
+};
+
 
 const registerGoogle = async (req, res, next) => {
 	const { tokenid, googleid } = req.body;
@@ -46,7 +48,7 @@ const registerGoogle = async (req, res, next) => {
 
 		await isUniqueEmail(payload.email);
 
-		const user = await db.users.findOne({ googleid: googleid });
+		const user = await db.users.findOne({ where: { googleid: googleid } });
 
 		if (user) {
 			return res.status(400).json({ success: false, error: "The account already exists!" });
@@ -66,7 +68,7 @@ const verify = async (req, res, next) => {
 			return res.status(400).json({ success: false, error: "No token activation found!" });
 		}
 
-		const user = await db.users.findOne({ aToken: token });
+		const user = await db.users.findOne({ where: { aToken: token } });
 
 		if (!user) {
 			return res.status(400).json({ success: false, error: "Activation token is invalid or the account is already activated!" });
@@ -110,7 +112,7 @@ const newPassword = async (req, res, next) => {
 			return res.status(400).json({ success: false, error: "Invalid data provided!" });
 		}
 
-		const user = await db.users.findOne({ rToken: token });
+		const user = await db.users.findOne({ where: { rToken: token } });
 
 		if (!user) {
 			return res.status(400).json({ success: false, error: "The recovery token is invalid!" });
@@ -138,10 +140,14 @@ const login = async (req, res, next) => {
 			return res.status(400).json({ success: false, error: "Invalid data provided!" });
 		}
 
-		const user = await db.users.findOne({ username: username.toLowerCase() });
+		const user = await db.users.findOne({ where: { username: username.toLowerCase() } });
 
-		if (!user || !(await compare(password, user.password))) {
-			return res.status(400).json({ success: false, error: "The username or password is incorrect!" });
+		if (!user) {
+			return res.status(400).json({ success: false, error: "The username is incorrect!" });
+		}
+
+		else if (!await compare(password, user.password)) {
+			return res.status(400).json({ success: false, error: "The password is incorrect!" });
 		}
 
 		if (!user.verified) {
@@ -166,7 +172,7 @@ const authGoogle = async (req, res, next) => {
 			return res.status(400).json({ success: false, error: "Invalid data provided!" });
 		}
 
-		const user = await db.users.findOne({ googleid: googleid });
+		const user = await db.users.findOne({ where: { googleid: googleid } });
 
 		if (!user) {
 			return res.status(400).json({ success: false, error: "An account with the specified Google account doesn't exist!" });
@@ -188,7 +194,7 @@ const findUserById = async (req, res, next) => {
 	const { id } = req.params;
 
 	try {
-		const user = await db.users.findOne({ id: id });
+		const user = await db.users.findOne({ where: { id: id } });
 
 		if (!user) {
 			return res.status(404).json({ success: false, error: "The user is not found!" });
@@ -203,7 +209,7 @@ const findUserByUsername = async (req, res, next) => {
 	const { username } = req.params;
 
 	try {
-		const user = await db.users.findOne({ username: username });
+		const user = await db.users.findOne({ where: { username: username } });
 
 		if (!user) {
 			return res.status(404).json({ success: false, error: "The user is not found!" });
@@ -218,7 +224,7 @@ const completeInfos = async (req, res, next) => {
 	const { userid } = req.body;
 
 	try {
-		const user = await db.users.findOne({ id: userid });
+		const user = await db.users.findOne({ where: { id: userid } });
 
 		if (!user) {
 			return res.status(400).json({ success: false, error: "An error has occurred while validating account information!" });
@@ -239,7 +245,7 @@ const isProfileCompleted = async (req, res, next) => {
 	const { userid } = req.body;
 
 	try {
-		const user = await db.users.findOne({ id: userid });
+		const user = await db.users.findOne({ where: { id: userid } });
 
 		if (!user) {
 			return res.status(400).json({ success: false, error: "User not found!" });
@@ -329,7 +335,7 @@ const like = async (req, res, next) => {
 			return res.status(400).json({ success: false, error: "It's your own profile, dude!" });
 		}
 
-		const user = await db.users.findOne({ id });
+		const user = await db.users.findOne({ where: { id: userid } });
 		if (!user) {
 			return res.status(404).json({ success: false, error: "The specified user is not found!" });
 		}
@@ -375,7 +381,7 @@ const unlike = async (req, res, next) => {
 			return res.status(400).json({ success: false, error: "It's your own profile, dude!" });
 		}
 
-		const user = await User.findOne({ where: { id } });
+		const user = await db.users.findOne({ where: { id: userid } });
 		if (!user) {
 			return res.status(404).json({ success: false, error: "The specified user is not found!" });
 		}
@@ -420,7 +426,7 @@ const block = async (req, res, next) => {
 		}
 
 
-		const user = await db.users.findOne({ id: blocked });
+		const user = await db.users.findOne({ where: { id: blocked } });
 		if (!user) {
 			return res.status(404).json({ success: false, error: "The user specified is not found!" });
 		}
@@ -445,7 +451,7 @@ const unblock = async (req, res, next) => {
 		} else if (unblocked == userid) {
 			return res.status(400).json({ success: false, error: "Its your own profile dude !" });
 		} else {
-			await User.findOne({ id: unblocked })
+			await User.findOne({ where: { id: unblocked } })
 				.then(async () => {
 					if (!user) {
 						return res.status(404).json({ success: false, error: "The user specified is not found !" });

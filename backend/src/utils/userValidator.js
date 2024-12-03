@@ -129,13 +129,25 @@ const isLongitude = (lat) => {
 
 const emailExists = async (email) => {
     try {
-        const user = await db.users.findOne({ email: email.toLowerCase() });
+        // Tìm kiếm người dùng theo email (chuyển email thành chữ thường)
+        const user = await db.users.findOne({
+            where: {
+                email: email.toLowerCase()  // Chuyển email thành chữ thường trước khi tìm kiếm
+            }
+        });
 
+        // Kiểm tra nếu không tìm thấy người dùng với email đó
+        if (!user) {
+            return null; // Nếu không có người dùng, trả về null
+        }
+
+        // Nếu tìm thấy người dùng, trả về người dùng
         return user;
     } catch (error) {
+        // Xử lý lỗi khi không thể tìm kiếm
         throw new Error("Failed to validate the specified email, please try again later!");
     }
-}
+};
 
 const isUniqueEmail = async (email) => {
     try {
@@ -152,13 +164,25 @@ const isUniqueEmail = async (email) => {
 
 const usernameExists = async (username) => {
     try {
-        const user = await db.users.findOne({ username: username.toLowerCase() });
+        // Tìm kiếm người dùng theo username (chuyển thành chữ thường)
+        const user = await db.users.findOne({
+            where: {
+                username: username.toLowerCase()  // Chuyển username thành chữ thường trước khi tìm kiếm
+            }
+        });
 
+        // Kiểm tra nếu không tìm thấy người dùng
+        if (!user) {
+            return null; // Nếu không có người dùng, trả về null
+        }
+
+        // Nếu tìm thấy người dùng, trả về người dùng
         return user;
     } catch (error) {
+        // Xử lý lỗi khi không thể tìm kiếm
         throw new Error("Failed to find your username!");
     }
-}
+};
 
 const isUniqueUsername = async (username) => {
     try {
@@ -396,7 +420,7 @@ const validateEditedInformations = async (id, firstname, lastname, username, ema
 
 const isOldpassValid = async (userid, oldpassword) => {
     try {
-        const user = await db.users.findOne({ id: userid });
+        const user = await db.users.findOne({ where: { id: userid } });
 
         if (!user || !(await compare(oldpassword, user.password))) {
             throw new Error("The old password is incorrect!");
