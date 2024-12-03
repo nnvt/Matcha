@@ -1,8 +1,8 @@
 import db from '../models/index';
-const { fileSizeFilter } = require("./image.validators");
-const { validateTag } = require("./tag.validators");
+const { fileSizeFilter } = require("./imageValidator");
+const { validateTag } = require("./tagValidator");
 const { getAge } = require("./helpers");
-const { compare } = require("./generateTokens.js");
+const { compare } = require("./genToken.js");
 
 const validatefirstname = (firstname) => {
     const regex = /^[a-z]{3,}$/;

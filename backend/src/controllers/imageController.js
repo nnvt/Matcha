@@ -1,6 +1,6 @@
 import db from '../models/index';
-const { fileFilter, deleteImage } = require("../validators/image.validators");
-const { msgsMulterError } = require("../helpers/helpers");
+const { fileFilter, deleteImage } = require("../utils/imageValidator");
+const { msgsMulterError } = require("../utils/helpers");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 
