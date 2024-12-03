@@ -1,3 +1,3 @@
 # hospital_database_management_system
-# test
-# git thu thu
+# npx sequelize-cli db:migrate to create db
+# npx sequelize-cli db:seed:all to seeder db
