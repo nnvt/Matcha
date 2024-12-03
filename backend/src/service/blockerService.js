@@ -3,13 +3,13 @@ const Sequelize = require('sequelize')
 // Get the blacklist of a specific user
 const getBlacklist = async (userId) => {
   try {
-    const blacklist = await db.Blocker.findAll({
+    const blacklist = await db.blockers.findAll({
       attributes: [],
       where: { blocker: userId },
       order: [['createdAt', 'DESC']],
       include: [
         {
-          model: db.User,
+          model: db.users,
           as: 'BlockedUser', // Alias for the associated user (blocked)
           attributes: [
             'id',
@@ -23,7 +23,7 @@ const getBlacklist = async (userId) => {
           ],
           include: [
             {
-              model: db.Image,
+              model: db.images,
               as: 'Images',
               where: { profile: 1 },
               attributes: [], // Do not return the entire Image object, only get the `url`
@@ -43,7 +43,7 @@ const getBlacklist = async (userId) => {
 // Find a specific block entry between two users
 const findBlock = async (blocker, blocked) => {
   try {
-    const block = await db.Blocker.findOne({
+    const block = await db.blockers.findOne({
       where: {
         blocker,
         blocked
@@ -59,7 +59,7 @@ const findBlock = async (blocker, blocked) => {
 // Block a user
 const block = async (blocker, blocked) => {
   try {
-    const newBlock = await db.Blocker.create({ blocker, blocked });
+    const newBlock = await db.blockers.create({ blocker, blocked });
     return newBlock;
   } catch (e) {
     throw e;
@@ -69,7 +69,7 @@ const block = async (blocker, blocked) => {
 // Unblock a user
 const unblock = async (blocker, blocked) => {
   try {
-    const result = await db.Blocker.destroy({
+    const result = await db.blockers.destroy({
       where: { blocker, blocked }
     });
 

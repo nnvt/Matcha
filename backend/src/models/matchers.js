@@ -1,23 +1,29 @@
-import { Model } from 'sequelize';
-
-export default (sequelize, DataTypes) => {
-  class Matchers extends Model {
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class matchers extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
-      // Matchers belongs to users (matcher)
-      Matchers.belongsTo(models.users, { foreignKey: 'matcher', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+      // define association here
+      // matchers belongs to users (matcher)
+      matchers.belongsTo(models.users, { foreignKey: 'matcher', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
-      // Matchers belongs to users (matched)
-      Matchers.belongsTo(models.users, { foreignKey: 'matched', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+      // matchers belongs to users (matched)
+      matchers.belongsTo(models.users, { foreignKey: 'matched', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     }
   }
-
-  Matchers.init({
-    matcher: DataTypes.INTEGER,
+  matchers.init({
+    matchers: DataTypes.INTEGER,
     matched: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Matchers',
+    modelName: 'matchers',
   });
-
-  return Matchers;
+  return matchers;
 };

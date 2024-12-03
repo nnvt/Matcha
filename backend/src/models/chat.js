@@ -1,4 +1,7 @@
-import { createRequire } from 'module';
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class chat extends Model {
     /**

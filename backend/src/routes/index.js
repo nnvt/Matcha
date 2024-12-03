@@ -1,11 +1,11 @@
 import express from 'express';
-import usersRoutes from './user.routes.js';
-import tagsRoutes from './tags.routes.js';
-import imageRoutes from './images.routes.js';
-import historyRoutes from './history.routes.js';
-import matchersRoutes from './matchers.routes.js';
-import chatRoutes from '../routes/chat.routes.js';
-import notificationsRoutes from './notification.routes.js';
+import usersRoutes from './userRoutes';
+import tagsRoutes from './tagsRoutes';
+import imageRoutes from './imageRoutes';
+import historyRoutes from './historyRoutes';
+import matchersRoutes from './matchersRoutes';
+// import chatRoutes from '../routes/chatRoutes';
+import notificationsRoutes from './notificationRoutes';
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router
   .use("/tags", tagsRoutes)
   .use("/history", historyRoutes)
   .use("/matchers", matchersRoutes)
-  .use("/chat", chatRoutes)
+  // .use("/chat", chatRoutes)
   .use("/notifications", notificationsRoutes);
 
 export default router;

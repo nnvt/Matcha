@@ -59,6 +59,38 @@ exports.read = async (req, res) => {
     }
 };
 
+exports.readAll = async (req, res) => {
+    const { userid } = req.body;
+
+    try {
+        // Cập nhật tất cả thông báo của người dùng thành "đã đọc"
+        const result = await db.notification.update(
+            { status: 'read' },  // Cập nhật status thành "read" hoặc giá trị phù hợp
+            { where: { user_id: userid } }  // Điều kiện: chỉ cập nhật các thông báo của người dùng này
+        );
+
+        // Kiểm tra nếu có thông báo được cập nhật
+        if (result[0] > 0) {
+            return res.status(200).json({
+                success: true,
+                message: "All notifications have been read!",
+            });
+        } else {
+            // Nếu không có thông báo nào được cập nhật (có thể do không có thông báo hoặc tất cả đã được đọc)
+            return res.status(400).json({
+                success: false,
+                error: "No notifications to mark as read!",
+            });
+        }
+    } catch (e) {
+        // Xử lý lỗi
+        return res.status(400).json({
+            success: false,
+            error: "An error has occurred while reading all notifications, try later!",
+        });
+    }
+};
+
 exports.delete = async (req, res) => {
     const id = req.params.id;
     const { userid } = req.body;

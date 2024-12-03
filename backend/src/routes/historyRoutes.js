@@ -1,9 +1,23 @@
 import express from 'express';
-import authMiddleware from '../middlewares/auth.middleware.js';
-import userMiddleware from '../middlewares/user.middleware.js';
-import historyController from '../controllers/history.controller.js';
+import authMiddleware from '../middleware/authMiddleware';
+import userMiddleware from '../middleware/userMiddleware';
+import historyController from '../controllers/historyController';
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: 'http'
+ *       scheme: 'bearer'
+ *       bearerFormat: 'JWT'
+ *
+ * tags:
+ *   name: History
+ *   description: All about /api/history
+ */
 
 router
   .use("/", authMiddleware.isAuth, userMiddleware.completeInfos)

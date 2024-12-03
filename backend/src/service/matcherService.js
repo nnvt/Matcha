@@ -1,4 +1,4 @@
-import db from '../models/index';  // ES module import
+const db = require('../models/index');
 
 const findMatchers = async (userid) => {
     try {

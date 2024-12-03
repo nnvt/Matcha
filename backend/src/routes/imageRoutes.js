@@ -1,8 +1,8 @@
 import express from 'express';
-import authMiddleware from '../middlewares/auth.middleware.js';
-import userMiddleware from '../middlewares/user.middleware.js';
-import imageMiddleware from '../middlewares/image.middleware.js';
-import imageController from '../controllers/image.controller.js';
+import authMiddleware from '../middleware/authMiddleware';
+import userMiddleware from '../middleware/userMiddleware';
+import imageMiddleware from '../middleware/imageMiddleware';
+import imageController from '../controllers/imageController';
 
 const router = express.Router();
 
