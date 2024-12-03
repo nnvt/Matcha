@@ -8,7 +8,7 @@ import React, {
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-search/css/index.css";
-import cupid from "../assets/images/Cupid.svg";
+import cupid from "../assets/logo/cupid.svg";
 import "../assets/css/steps.less";
 import axios from "axios";
 // import { Logout } from "../helper/Verifications";
@@ -33,12 +33,12 @@ import {
     AutoComplete,
     Col,
 } from "antd";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
-import { stepsAction, logoutAction } from "../actions/userAction";
-import { Context } from "../Contexts/Context";
+import { stepsAction, logoutAction } from "../api/userActions";
+import { Context } from "../Reducers/Context";
 import L from "leaflet";
-import { COMPLETE } from "../actions/actionTypes";
+import { COMPLETE } from "../assets/constant";
 
 import {
     openMessageSuccess,
@@ -89,6 +89,7 @@ function useStateCallback(initialState) {
 }
 // * INFO COMPONNENT
 const Info = (props) => {
+    let navigate = useNavigate();
     const [tags, setTags] = useStateCallback([]);
     const [options, setOptions] = useStateCallback([]);
     const [inputVisible, setInputVisible] = useState(false);
@@ -489,7 +490,7 @@ const CompleteProfile = () => {
     const [visible, setVisible] = useState(false);
     const { state, dispatch } = useContext(Context);
     const [current, setCurrent] = useState(0);
-    let history = useHistory();
+    let navigate = useNavigate();
     const [user, setUser] = useState({
         gender: "",
         interest: "",
@@ -518,7 +519,7 @@ const CompleteProfile = () => {
                 },
             });
             openMessageSuccess(res.message);
-            history.push("/home");
+            navigate("/home");
         } else {
             openMessageError(res.error);
         }

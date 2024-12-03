@@ -11,6 +11,7 @@ import Register from "../pages/Register";
 import ForgotPass from "../pages/ForgotPass";
 import Policy from "../components/Policy";
 import CompleteProfile from "../pages/CompleteProfile";
+import Chat from "../pages/Chat";
 
 const Routing = () => {
     return (
@@ -26,7 +27,7 @@ const Routing = () => {
 
                     {/* Private Routes */}
                     <Route path="/steps" element={<PrivateRoute restricted={false}><CompleteProfile /> </PrivateRoute>} />
-                    <Route path="/steps" element={<PrivateRoute restricted={false}><CompleteProfile /> </PrivateRoute>} />
+                    <Route path="/chat" element={<PrivateRoute restricted={false}><Chat /> </PrivateRoute>} />
                     {/* Other Routes */}
                 </Routes>
             </Router>
