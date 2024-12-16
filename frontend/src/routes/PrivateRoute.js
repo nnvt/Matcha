@@ -1,11 +1,12 @@
+// PrivateRoute.jsx
 import React, { useState, useEffect } from "react";
-import { Route, Navigate } from "react-router-dom";
-import { checkTokenAction } from "../api/userActions.js";
+import { Navigate, useLocation } from "react-router-dom";
+import { checkTokenAction } from "../api/userActions";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-    // Set initial state to handle loading and login status
+const PrivateRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [logged, setLogged] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
         // Define async function to check token
@@ -21,24 +22,15 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         fetchData();
     }, []);
 
-    // Render based on loading and logged states
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                loading ? (
-                    // Show a loading spinner or null when loading
-                    <div>Loading...</div> // Replace with a proper loader or spinner if needed
-                ) : logged ? (
-                    // If logged in, render the protected component
-                    <Component {...props} />
-                ) : (
-                    // If not logged in, Navigate to login
-                    <Navigate to="/login" />
-                )
-            }
-        />
-    );
+    if (loading) {
+        return <div>Loading...</div>; // Replace with a proper loader if desired
+    }
+
+    if (!logged) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
+    return children;
 };
 
 export default PrivateRoute;

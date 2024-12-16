@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '../utils/customize.axios';
 
 //* Notify Actions
 export const notifyAction = async (token) => {

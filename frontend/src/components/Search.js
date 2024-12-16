@@ -84,20 +84,25 @@ export const Search = (props) => {
         });
     };
     // eslint-disable-next-line
-    useEffect(async () => {
-        await getTags().then((data) => {
-            let tags = data.map((tag) => {
-                return "#" + tag.name;
-            });
-            setOriginalTags(tags);
-            setOptions(
-                tags.map((t) => {
-                    return { value: t };
-                })
-            );
-        });
-        // eslint-disable-next-line
-    }, []);
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const data = await getTags();
+                const formattedTags = data.map((tag) => `#${tag.name}`);
+                setOriginalTags(formattedTags);
+                setOptions(
+                    formattedTags.map((t) => ({
+                        value: t,
+                    }))
+                );
+            } catch (error) {
+                console.error("Error fetching tags:", error);
+            } finally {
+            }
+        };
+
+        fetchTags();
+    }, [setOriginalTags, setOptions]);
 
     const removeTag = (tag) => {
         // eslint-disable-next-line

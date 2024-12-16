@@ -5,12 +5,12 @@ import React, {
     useCallback,
     useContext,
 } from "react";
-import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import "react-leaflet-search/css/index.css";
+import 'leaflet-geosearch/dist/geosearch.css';
 import cupid from "../assets/logo/cupid.svg";
 import "../assets/css/steps.less";
-import axios from "axios";
+import axios from '../utils/customize.axios';
 // import { Logout } from "../helper/Verifications";
 import {
     CloseOutlined,
@@ -44,7 +44,7 @@ import {
     openMessageSuccess,
     openMessageWarning,
     openMessageError,
-} from "../helper/Verifications";
+} from "../utils/Verifications";
 
 const { Step } = Steps;
 // ?GET IP AND DATA FOR LOCALISATION
@@ -435,7 +435,7 @@ const Location = (props) => {
     return (
         <>
             <Form.Item>
-                <Map
+                <MapContainer
                     style={{ height: "500px", width: "100wh" }}
                     center={position}
                     zoom={13}
@@ -450,7 +450,7 @@ const Location = (props) => {
                             We see you <br /> You are here.
                         </Popup>
                     </Marker>
-                </Map>
+                </MapContainer>
             </Form.Item>
         </>
     );

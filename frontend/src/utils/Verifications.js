@@ -19,3 +19,11 @@ export const openMessageError = (msg) => {
         message.error(msg, 3);
     }, 3000);
 };
+export const openMessageInfo = () => {
+    message.success("See You Soon", 3);
+};
+export const openMessageWarning = (msg) => {
+    setTimeout(() => {
+        message.warning(msg, 2);
+    }, 3000);
+};

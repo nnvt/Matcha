@@ -21,12 +21,9 @@ const Chat = () => {
     const [messageToSend, setMessageToSend] = useState("");
 
     const loadMessages = async () => {
-        // console.log("Loading messages for chat ID:", activeChat.chatid);
         if (activeChat.chatid) {
             const res = await msgAction(state.token, activeChat.chatid);
-            // console.log("Response from msgAction:", res);
             if (res && res.success) {
-                // console.log("Loaded messages: ", res.data);
                 setMessages(res.data);
             } else {
                 console.error("Failed to load messages:", res);
