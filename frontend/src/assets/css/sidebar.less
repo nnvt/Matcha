@@ -1,0 +1,39 @@
+@import "global.less";
+
+@default-linear-gradient: linear-gradient(137.59deg,
+        #FF6F91 -4.02%,
+        #FF5677 50%,
+        #FF3D6B 96.96%);
+
+#sidebar-active {
+    display: block;
+    width: 5px;
+    height: 42px;
+    background: @default-linear-gradient;
+    margin-left: 4px;
+    box-shadow: 1px 1px 5px #f89297;
+    border-radius: 57px;
+    position: absolute;
+}
+
+.ant-menu-item {
+    font-weight: bold;
+}
+
+.ant-menu-item-selected {
+    display: flex;
+    align-items: center;
+    color: #f89297;
+}
+
+.ant-drawer-body {
+    padding: 0;
+}
+
+.badge sup {
+    color: white;
+}
+
+.ant-drawer-content-wrapper {
+    width: 320px !important;
+}

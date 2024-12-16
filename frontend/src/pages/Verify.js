@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Result, Button, Spin } from "antd";
-import axios from "axios";
+import axios from '../utils/customize.axios';
 
 const Verify = (props) => {
   const [reqStatus, setStatus] = useState("sending");

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '../utils/customize.axios';
 
 // ? infoUpdate Action
 export const infoUpdate = async (token, userInfos) => {

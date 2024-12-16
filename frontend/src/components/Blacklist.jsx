@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import { List, Avatar, Spin, Button, message } from "antd";
-import { blackListAction, unBlockAction } from "../actions/editActions";
+import { blackListAction, unBlockAction } from "../api/editActions";
 import { Context } from "../Reducers/Context";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { openMessageSuccess, openMessageError } from "../utils/Verifications";
 export const Blacklist = () => {
   const { state } = useContext(Context);
   const [blacklist, setBlacklist] = useState([]);
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const handleUserClicked = (username) => {
-    history.push("/profile/" + username);
+    navigate(`/profile/${username}`);
   };
   const handlUnBlockUser = async (id) => {
     const res = await unBlockAction(state.token, id);

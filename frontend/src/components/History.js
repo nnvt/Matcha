@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { List, Avatar, Spin, Tag } from "antd";
+import { Link } from "react-router-dom";
 import { Context } from "../Reducers/Context";
 import { historyAction } from "../api/editActions";
 import { EnvironmentOutlined } from "@ant-design/icons";
@@ -32,9 +33,7 @@ export const History = () => {
               }
               title={
                 // eslint-disable-next-line
-                <a href="">
-                  {item.firstname} {item.lastname}
-                </a>
+                <Link to={`/profile/${item.username}`}>{item.firstname} {item.lastname}</Link>
               }
               description={item.age + " y.o"}
             />

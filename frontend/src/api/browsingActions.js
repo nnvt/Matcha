@@ -1,44 +1,47 @@
 import axios from '../utils/customize.axios';
 
-//* Notify Actions
-export const matchingAction = async (token) => {
+//* Browsing Actions
+export const BrowsingAction = async (token, filters) => {
     const config = {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
+        params: filters,
     };
 
     try {
         const res = await axios.get(
-            "http://localhost:3001/api/matchers/list",
+            "http://localhost:3001/api/users/find/suggestions",
             config
         );
 
         if (res.data) return res.data;
-        return true;
+        return false;
     } catch (error) {
         return error.response?.data;
     }
 };
 
-//* Chat MSG Action
-export const msgAction = async (token, id) => {
+//* Search Actions
+export const searchAction = async (token, search, filter) => {
     const config = {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
+        params: filter,
     };
 
     try {
-        const res = await axios.get(
-            `http://localhost:3001/api/chat/messages/${id}`,
+        const res = await axios.post(
+            "http://localhost:3001/api/users/search",
+            search,
             config
         );
 
         if (res.data) return res.data;
-        return true;
+        return false;
     } catch (error) {
         return error.response?.data;
     }

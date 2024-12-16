@@ -1,12 +1,12 @@
 import React from "react";
 import "../assets/css/Profile.less";
 import Layout from "../layout/default";
-import UserProfile from "../components/UserProfile";
+import UserProfile from "../components/Userprofile";
 
-const Profile = function (props) {
+const Profile = () => {
   return (
     <Layout>
-      <UserProfile data={props.match.params} />
+      <UserProfile />
     </Layout>
   );
 };

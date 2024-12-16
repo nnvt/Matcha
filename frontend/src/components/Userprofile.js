@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axios from '../utils/customize.axios';
 import "../assets/css/Profile.less";
 import {
   Row,
@@ -22,12 +22,12 @@ import {
   WomanOutlined,
   EditOutlined,
 } from "@ant-design/icons";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../Reducers/Context";
 
 const UserProfile = () => {
   const { state } = useContext(Context);
-  let history = useHistory();
+  let navigate = useNavigate();
   const [user, setUser] = useState({
     id: "",
     firstname: "",
@@ -71,54 +71,56 @@ const UserProfile = () => {
   };
 
   // eslint-disable-next-line
-  useEffect(async () => {
-    let userData;
+  useEffect(() => {
+    const fetchUserData = async () => {
+      let userData;
+      try {
+        await getConnectedUser(); // Assuming getConnectedUser() returns a response
 
-    await getConnectedUser();
+        if (response.status === 200) {
+          userData = response.data;
 
-    if (response.status === 200) {
-      userData = response.data;
+          setUser({
+            ...user,
+            profile: userData.images?.find((i) => i.profile === 1)?.url || "",
+            images: userData.images.filter((i) => i.profile === 0),
+            id: userData.id,
+            firstname: userData.firstname,
+            lastname: userData.lastname,
+            username: userData.username,
+            tags: userData.tags,
+            gender: userData.gender,
+            looking: userData.looking,
+            bio: userData.bio,
+            fame: userData.fame,
+            lat: userData.lat,
+            lang: userData.lang,
+            country: userData.country,
+            city: userData.city,
+            age: userData.age,
+            views: userData.views,
+            followers: userData.followers,
+            following: userData.following,
+            status: userData.status,
+          });
+        } else if (response.status === 400) {
+          navigate("/undefined");
+        } else {
+          navigate("/404");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-      setUser({
-        ...user,
-        profile: userData.images?.map((i) => {
-          return i.profile === 1 ? i.url : null;
-        })[0],
+    fetchUserData(); // Call the async function here
 
-        // eslint-disable-next-line
-        images: userData.images.filter((i) => {
-          if (i.profile === 0) return i;
-        }),
-        id: userData.id,
-        firstname: userData.firstname,
-        lastname: userData.lastname,
-        username: userData.username,
-        tags: userData.tags,
-        gender: userData.gender,
-        looking: userData.looking,
-        bio: userData.bio,
-        fame: userData.fame,
-        lat: userData.lat,
-        lang: userData.lang,
-        country: userData.country,
-        city: userData.city,
-        age: userData.age,
-        views: userData.views,
-        followers: userData.followers,
-        following: userData.following,
-        status: userData.status,
-      });
-    } else if (response.status === 400) {
-      history.push("/undefined");
-    } else {
-      history.push("/404");
-    }
+    // Cleanup function (if needed)
     return () => {
       setUser({});
     };
+  }, []); // Empty dependency array to only run this effect on mount
 
-    // eslint-disable-next-line
-  }, []);
 
   const openModal = async (name) => {
     let data;
@@ -171,13 +173,15 @@ const UserProfile = () => {
     setisModalVisible(false);
   };
 
+  console.log(user.profile)
+
   return (
     <Row>
       <Col xs={24} md={11} span={8}>
         <div id="side-container" style={{ marginBottom: "20px" }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Avatar
-              id="profile-picture"
+              id="profile-picture-2"
               size={150}
               src={
                 user.profile ? "http://localhost:3001/api/" + user.profile : ""
@@ -367,7 +371,7 @@ const UserProfile = () => {
             </Tag>
           </div>
           <div id="tags">
-            {user.tags.map((tag, index) => (
+            {user.tags?.map((tag, index) => (
               <Tag key={index}>{tag.name}</Tag>
             ))}
           </div>
@@ -382,7 +386,7 @@ const UserProfile = () => {
               type="primary"
               shape="circle"
               icon={<EditOutlined />}
-              onClick={() => history.push("/settings")}
+              onClick={() => navigate("/settings")}
             />
           </div>
           <Divider />
@@ -393,7 +397,7 @@ const UserProfile = () => {
           <div>
             <span id="pictures-title">Pictures</span>
             <div id="profile-pictures">
-              {user.images.map((img, index) => (
+              {user.images?.map((img, index) => (
                 <Image
                   key={index}
                   src={"http://localhost:3001/api/" + img?.url}

@@ -2,12 +2,12 @@ import React, { useContext, useState, useEffect } from "react";
 import { Card, Tooltip, Progress, Tag } from "antd";
 import { EnvironmentTwoTone, UserOutlined } from "@ant-design/icons";
 import Avatar from "antd/lib/avatar/avatar";
-import { useHistory } from "react-router-dom";
-import { Context } from "../Contexts/Context";
+import { useNavigate } from "react-router-dom";
+import { Context } from "../Reducers/Context";
 import { socketConn as socket } from "../sockets";
 
 export const UserCard = (props) => {
-  let history = useHistory();
+  let navigate = useNavigate();
   const { state } = useContext(Context);
   const [visitor, setVisitor] = useState("");
 
@@ -27,7 +27,7 @@ export const UserCard = (props) => {
       visitor: visitor,
       visited: props.data.id,
     });
-    history.push("/profile/" + username);
+    navigate(`/profile/${username}`);
     // }, 1500);
   };
 

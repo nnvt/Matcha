@@ -6,7 +6,7 @@ import "../assets/css/register.less";
 import cupid from "../assets/audio/cupid.m4a";
 import { Context } from "../Reducers/Context";
 import React, { useContext, useState } from "react";
-import { registerAction, RegisterAction } from "../api/userActions";
+import { registerAction } from "../api/userActions";
 import { useNavigate, Link } from "react-router-dom";
 import { openMessageSuccess, openMessageError } from "../utils/Verifications";
 

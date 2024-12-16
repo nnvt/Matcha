@@ -1,12 +1,13 @@
 import React from "react";
 import "../assets/css/Profile.less";
 import Layout from "../layout/default";
-import UserInfo from "../components/UserInfo";
+import UserProfile from "../components/Userprofile";
 
-const Profile = function (props) {
+const Profile = () => {
+
   return (
     <Layout>
-      <UserInfo data={props.match.params} />
+      <UserProfile />
     </Layout>
   );
 };

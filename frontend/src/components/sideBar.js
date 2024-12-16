@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 
 import { Menu, Avatar, Drawer, Badge, List, Row, Col, Button } from "antd";
-import { useLocation, Link, useHistory } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Context } from "../Reducers/Context";
 //icons
 import {
@@ -16,7 +16,7 @@ import {
 
 //css
 import "../assets/css/sidebar.less";
-import { openMessageError } from "../helper/Verifications";
+import { openMessageError } from "../utils/Verifications";
 
 //actions
 import { logoutAction } from "../api/userActions";
@@ -26,14 +26,14 @@ import {
   setAllNotifSeen,
   deleteNotif,
   deleteAllNotif,
-} from "../actions/notifyActions";
+} from "../api/notifyActions";
 import moment from "moment";
 import { socketConn as socket } from "../sockets";
 
 const SideBar = () => {
   const { state, dispatch } = useContext(Context);
   const location = useLocation();
-  let history = useHistory();
+  let navigate = useNavigate();
   const [itemClicked, setItemClicked] = useState(0);
   const [showDrawer, setshowDrawer] = useState(false);
   // eslint-disable-next-line
@@ -73,7 +73,7 @@ const SideBar = () => {
   const handleClickNotif = (id, username) => {
     // SET NOTIF has been seen
     setNotifSeen(state.token, id);
-    history.push("/profile/" + username);
+    navigate(`/profile/${username}`);
   };
   const handleDeleteNotif = (id) => {
     Notifs.filter((item) => item.id === id);
@@ -93,7 +93,10 @@ const SideBar = () => {
   const handleMenuClick = (key) => {
     setItemClicked(key);
     if (key === 4) setshowDrawer(true);
-    else history.push(["", "/home", "/chat", "/profile", "", "/settings"][key]);
+    else {
+      const paths = ["", "/home", "/chat", "/profile", "", "/settings"];
+      navigate(paths[key]);
+    }
   };
 
   return (
@@ -237,15 +240,15 @@ const SideBar = () => {
                   style={
                     item.seen
                       ? {
-                          backgroundColor: "white",
-                          cursor: "pointer",
-                          padding: "10px",
-                        }
+                        backgroundColor: "white",
+                        cursor: "pointer",
+                        padding: "10px",
+                      }
                       : {
-                          backgroundColor: "#fff1f0",
-                          cursor: "pointer",
-                          padding: "10px",
-                        }
+                        backgroundColor: "#fff1f0",
+                        cursor: "pointer",
+                        padding: "10px",
+                      }
                   }
                   onClick={() => {
                     handleClickNotif(item.id, item.username);

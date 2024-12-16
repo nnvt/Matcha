@@ -3,7 +3,7 @@ import { Layout, Avatar } from "antd";
 import SideBar from "../components/sideBar";
 import "../assets/css/default.less";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios from '../utils/customize.axios';
 import { Context } from "../Reducers/Context";
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -28,15 +28,21 @@ const DefaultLayout = ({ children }) => {
     profile: [],
   });
   // eslint-disable-next-line
-  useEffect(async () => {
-    // eslint-disable-next-line
-    let userData = await getUser();
-    // eslint-disable-next-line
-    userData.profile = userData.images.filter((i) => {
-      if (i.profile === 1) return "http://localhost:3001/api/" + i.url;
-    })[0];
-    setUser(userData);
-    // eslint-disable-next-line
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getUser();
+        userData.profile = userData.images.filter((i) => {
+          if (i.profile === 1) return "http://localhost:3001/api/" + i.url;
+        })[0];
+        setUser(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Optionally, set an error state here
+      }
+    };
+
+    fetchUser();
   }, []);
 
   const getUser = async () => {
@@ -89,7 +95,7 @@ const DefaultLayout = ({ children }) => {
               flexBasis: "100%",
             }}>
             <Link to="/home">
-              <span style={{ cursor: "pointer" }}>MATCHA</span>
+              <span style={{ cursor: "pointer", color: "#d9374b" }}>MATCHA</span>
             </Link>
           </h1>
           <div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axios from '../utils/customize.axios';
 import "../assets/css/Profile.less";
 import {
   Row,
@@ -43,7 +43,7 @@ import {
 import moment from "moment";
 import { socketConn as socket } from "../sockets";
 
-const UserInfo = (props) => {
+const UserInfo = ({ username }) => {
   const { state } = useContext(Context);
   const [status, setStatus] = useState({
     online: false,
@@ -97,18 +97,13 @@ const UserInfo = (props) => {
 
   useEffect(() => {
     const loaduser = async () => {
-      const res = await getUser(props.data.username);
+      const res = await getUser(username);
 
       if (res) {
         setUser({
           ...user,
-          profile: res.images.map((i) => {
-            return i.profile === 1 ? i.url : null;
-          })[0],
-          // eslint-disable-next-line
-          images: res.images.filter((i) => {
-            if (i.profile === 0) return i;
-          }),
+          profile: res.images.find((i) => i.profile === 1)?.url || "",
+          images: res.images.filter((i) => i.profile === 0),
           id: res.id,
           firstname: res.firstname,
           lastname: res.lastname,
@@ -282,6 +277,8 @@ const UserInfo = (props) => {
       </Menu.Item>
     </Menu>
   );
+
+  console.log(user.images);
 
   return (
     <Row>
@@ -534,12 +531,19 @@ const UserInfo = (props) => {
           <div>
             <span id="pictures-title">Pictures</span>
             <div id="profile-pictures">
-              {user.images?.map((img, index) => (
-                <Image
-                  key={index}
-                  src={img?.url}
-                  style={{ borderRadius: "8px" }}></Image>
-              ))}
+              {user.images?.map((img, index) => {
+                const normalizedUrl = img?.url.replace(/\\/g, "/");
+                console.log("Normalized Image URL:", normalizedUrl);
+                return (
+                  <Image
+                    key={index}
+                    src={`http://localhost:3001/api/${img?.url}`}
+                    style={{ borderRadius: "8px" }}
+                    onError={(e) => {
+                    }}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>

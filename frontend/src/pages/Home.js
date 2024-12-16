@@ -9,8 +9,7 @@ import { BrowsingAction, searchAction } from "../api/browsingActions";
 import { Context } from "../Reducers/Context";
 import { openMessageError } from "../utils/Verifications";
 import _ from "lodash";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { Circles } from "react-loader-spinner";
 
 const Home = () => {
   const { state } = useContext(Context);
@@ -242,7 +241,7 @@ const Home = () => {
           marginRight: "15px",
         }}
       >
-        <Loader
+        <Circles
           type="Hearts"
           color="#f58080"
           height={200}
@@ -308,16 +307,35 @@ const Home = () => {
           </div>
         </Col>
         {isSearching
-          ? searchedUsers.slice(limit - limit_p, limit).map((user) => (
-              <Col key={user.id} xxl={4} xs={24} sm={12} lg={6} span={6}>
+          ? searchedUsers.slice(limit - limit_p, limit).length > 0
+            ? searchedUsers.slice(limit - limit_p, limit).map((user) => (
+              <Col
+                key={user.id}
+                xxl={4}
+                xs={24}
+                sm={12}
+                lg={6}
+                span={6}
+              >
                 <UserCard data={user} />
               </Col>
             ))
-          : users.slice(limit - limit_p, limit).map((user) => (
-              <Col key={user.id} xxl={4} xs={24} sm={12} lg={6} span={6}>
+            : <div className="no-users-message">No users found</div>
+          : users.slice(limit - limit_p, limit).length > 0
+            ? users.slice(limit - limit_p, limit).map((user) => (
+              <Col
+                key={user.id}
+                xxl={4}
+                xs={24}
+                sm={12}
+                lg={6}
+                span={6}
+              >
                 <UserCard data={user} />
               </Col>
-            ))}
+            ))
+            : <div className="no-users-message">No users found</div>
+        }
       </Row>
       <Row
         type="flex"
