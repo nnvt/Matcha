@@ -189,9 +189,9 @@ const findSuggestions = async (user, options) => {
 		try {
 			pool.query(
 				"SELECT U.id, U.firstname, U.lastname, U.username, U.age, U.gender, U.fame, U.country, U.city,\
-				ROUND( 6371000 * ACOS( COS( RADIANS(?) ) * COS( RADIANS(U.lat) ) * COS( RADIANS(U.lag) - RADIANS(?) ) + SIN( RADIANS(?) ) * SIN( RADIANS(U.lat) ) ), 2 ) AS distance,\
+				ROUND( ST_Distance_Sphere( point(?, ?), point(U.lag, U.lat) ) * 0.001 ) as distance,\
 				( SELECT count(users_tags.tag_id) from users_tags WHERE users_tags.user_id = U.id and users_tags.tag_id in (SELECT Tag_id from users_tags where users_tags.user_id = ?) ) AS commonTags,\
-				( SELECT url FROM images WHERE images.user_id = U.id AND images.profile = 1 LIMIT 1 ) AS profile\
+				( SELECT url FROM images WHERE images.user_id = U.id AND images.profile = 1 LIMIT 1 ) AS `profile`\
 				FROM users AS U LEFT JOIN users_tags AS UT ON U.id = UT.user_id\
 				WHERE U.id <> ?\
 				AND U.gender = ?\
@@ -202,7 +202,6 @@ const findSuggestions = async (user, options) => {
 				HAVING distance BETWEEN ? AND ?\
 				ORDER BY distance ASC, commonTags DESC, fame DESC",
 				[
-					user.lat,
 					user.lang,
 					user.lat,
 					user.id,
@@ -230,85 +229,6 @@ const findSuggestions = async (user, options) => {
 								reject(err);
 							});
 					}
-				}
-			);
-		} catch (e) {
-			reject(e);
-		}
-	});
-};
-
-const search = (user, options) => {
-	return new Promise((resolve, reject) => {
-		try {
-			pool.query(
-				"SELECT U.id, U.firstname, U.lastname, U.username, U.age, U.gender, U.fame, U.country, U.city, ROUND( ST_Distance_Sphere( point(?, ?), point(U.lat, U.lag) ) * 0.001 ) as `distance`,\
-				( SELECT count(users_tags.tag_id) from users_tags WHERE users_tags.user_id = U.id and users_tags.tag_id in (SELECT Tag_id from users_tags where users_tags.user_id = ?) ) AS `commonTags`,\
-				( SELECT url FROM images WHERE images.user_id = U.id AND images.profile = 1 ) AS `profile`\
-				FROM `users` U\
-				WHERE U.id <> ?\
-				AND U.id NOT IN ( SELECT blocked FROM `blockers` WHERE blocker = ? )\
-				AND U.age BETWEEN ? AND ?\
-				AND U.fame BETWEEN ? AND ?",
-				[
-					user.lat,
-					user.lang,
-					user.id,
-					user.id,
-					user.id,
-					options.search.age.min,
-					options.search.age.max,
-					options.search.fame.min,
-					options.search.fame.max,
-				],
-				async (error, result) => {
-					if (error) {
-						reject(error);
-					} else {
-						let users = JSON.stringify(result);
-
-						await prepareUserData(users)
-							.then((data) => {
-								resolve(data);
-							})
-							.catch((err) => {
-								reject(err);
-							});
-					}
-				}
-			);
-		} catch (e) {
-			reject(e);
-		}
-	});
-};
-
-const getStatus = (userid) => {
-	return new Promise((resolve, reject) => {
-		try {
-			pool.query(
-				"SELECT status FROM `users` WHERE id = ?",
-				[userid],
-				(error, result) => {
-					if (error) reject(error);
-					else resolve(result[0]?.status);
-				}
-			);
-		} catch (e) {
-			reject(e);
-		}
-	});
-};
-
-const setStatus = (userid) => {
-	return new Promise((resolve, reject) => {
-		try {
-			pool.query(
-				"UPDATE `users` SET status = NOW() WHERE id = ?",
-				[userid],
-				(error, result) => {
-					if (error) reject(error);
-					else resolve();
 				}
 			);
 		} catch (e) {
