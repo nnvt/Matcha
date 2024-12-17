@@ -12,7 +12,7 @@ export const registerAction = async (registerData) => {
 
   try {
     const res = await axios.post(
-      "http://localhost:3001/api/users/register",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/register",
       registerData,
       config
     );
@@ -36,7 +36,7 @@ export const loginAction = async (loginData, dispatch) => {
 
   try {
     const res = await axios.post(
-      "http://localhost:3001/api/users/login",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/login",
       loginData,
       config
     );
@@ -94,7 +94,7 @@ export const resetAction = async (resetData) => {
   };
   try {
     const res = await axios.post(
-      "http://localhost:3001/api/users/resetpassword",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/resetpassword",
       resetData,
       config
     );
@@ -119,7 +119,7 @@ export const changePasswordAction = async (newPassData, itoken) => {
   };
   try {
     const res = await axios.patch(
-      "http://localhost:3001/api/users/newpassword",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/newpassword",
       data,
       config
     );
@@ -142,7 +142,7 @@ export const getUserAction = async (token, dispatch) => {
 
   try {
     const res = await axios.get(
-      "http://localhost:3001/api/users/verify/isinfoscompleted",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/verify/isinfoscompleted",
       config
     );
 
@@ -207,7 +207,7 @@ export const stepsAction = async (token, userData, dispatch) => {
 
   try {
     const res = await axios.patch(
-      "http://localhost:3001/api/users/completeinfos",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/completeinfos",
       form,
       config
     );
@@ -229,7 +229,7 @@ export const checkTokenAction = async (token) => {
 
   try {
     const res = await axios.post(
-      "http://localhost:3001/api/users/verify/token",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/verify/token",
       { token: token },
       config
     );

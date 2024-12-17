@@ -28,7 +28,7 @@ export const History = () => {
         renderItem={(item) => (
           <List.Item key={item.id}>
             <List.Item.Meta
-              avatar={<Avatar src={"http://localhost:3001/api/" + item.profile} />}
+              avatar={<Avatar src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + item.profile} />}
               title={
                 // Use Link to navigate to the user's profile page
                 <Link to={`/profile/${item.username}`}>{item.firstname} {item.lastname}</Link>

@@ -49,7 +49,7 @@ export const Blacklist = () => {
               style={{ flexBasis: "70%" }}
               avatar={
                 <Avatar
-                  src={"http://localhost:3001/api/" + item.profile}
+                  src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + item.profile}
                   onClick={() => handleUserClicked(item.username)}
                 />
               }

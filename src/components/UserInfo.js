@@ -89,7 +89,7 @@ const UserInfo = (props) => {
 
     try {
       const res = await axios.get(
-        "http://localhost:3001/api/users/find/user/username/" + username,
+        "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/user/username/" + username,
         config
       );
       return res.status === 200 ? res.data : false;
@@ -197,7 +197,7 @@ const UserInfo = (props) => {
         },
       };
       const res = await axios.post(
-        "http://localhost:3001/api/matchers/create",
+        "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/matchers/create",
         { matcher: state.id, matched: user.id },
         config
       );
@@ -223,7 +223,7 @@ const UserInfo = (props) => {
         },
       };
       const res = await axios.delete(
-        "http://localhost:3001/api/matchers/unmatch",
+        "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/matchers/unmatch",
         {
           data: { matcher: state.id, matched: user.id },
           ...config,
@@ -298,19 +298,19 @@ const UserInfo = (props) => {
     switch (name) {
       case "viewers":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/viewers",
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/viewers",
           config
         );
         break;
       case "following":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/following/" + user.id,
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/following/" + user.id,
           config
         );
         break;
       case "followers":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/followers/" + user.id,
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/followers/" + user.id,
           config
         );
         break;
@@ -349,7 +349,7 @@ const UserInfo = (props) => {
             <Avatar
               id="profile-picture-1"
               size={150}
-              src={user.profile ? "http://localhost:3001/api/" + user.profile : ""}
+              src={user.profile ? "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + user.profile : ""}
             />
           </div>
           <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
@@ -376,7 +376,7 @@ const UserInfo = (props) => {
                   <List.Item>
                     {item ? (
                       <List.Item.Meta
-                        avatar={<Avatar size={50} src={"http://localhost:3001/api/" + item.profile.replace(/\\/g, "/")} />}
+                        avatar={<Avatar size={50} src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + item.profile.replace(/\\/g, "/")} />}
                         title={<><Link to={`/profile/${item.username}`}>{item.firstname} {item.lastname}</Link></>}
                         description={<Tooltip title={`${item.fame}% Popularity`}><Progress strokeColor={{ "0%": "#d3ea13", "100%": "#68d083" }} percent={item.fame} showInfo={false} /></Tooltip>}
                       />
@@ -442,7 +442,7 @@ const UserInfo = (props) => {
                 return (
                   <Image
                     key={index}
-                    src={`http://localhost:3001/api/${img?.url}`}
+                    src={`https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/${img?.url}`}
                     style={{ borderRadius: "8px" }}
                     onError={(e) => {
                     }}

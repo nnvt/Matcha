@@ -24,7 +24,7 @@ const Verify = (props) => {
       try {
         await axios
           .patch(
-            "http://localhost:3001/api/users/verify",
+            "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/verify",
             { token: aToken },
             config
           )

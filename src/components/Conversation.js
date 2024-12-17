@@ -11,7 +11,7 @@
 //         marginBottom: "15px",
 //       }}>
 //       <Row align="middle">
-//         <Avatar src={"http://localhost:3001/api/" + props.data.profile} />
+//         <Avatar src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + props.data.profile} />
 //         <h3 style={{ marginBottom: "0px", marginLeft: "10px" }}>
 //           {props.data.lastname},{props.data.firstname}
 //         </h3>
