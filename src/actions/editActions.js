@@ -264,10 +264,15 @@ export const LikeAction = async (token, id) => {
     },
   };
 
+  const data = {
+    id,
+    token,
+  };
+
   try {
     const res = await axios.put(
       "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/like/" + id,
-      "",
+      data,
       config
     );
 
@@ -286,10 +291,16 @@ export const UnLikeAction = async (token, id) => {
     },
   };
 
+  const data = {
+    id,
+    token,
+  };
+
+
   try {
     const res = await axios.put(
       "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/unlike/" + id,
-      "",
+      data,
       config
     );
 
