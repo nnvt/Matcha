@@ -65,7 +65,7 @@ const UserProfile = () => {
       },
     };
     response = await axios.get(
-      "http://localhost:3001/api/users/find/profile",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/profile",
       config
     );
   };
@@ -145,19 +145,19 @@ const UserProfile = () => {
     switch (name) {
       case "viewers":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/viewers",
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/viewers",
           config
         );
         break;
       case "following":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/following/" + user.id,
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/following/" + user.id,
           config
         );
         break;
       case "followers":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/followers/" + user.id,
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/followers/" + user.id,
           config
         );
         break;
@@ -184,7 +184,7 @@ const UserProfile = () => {
               id="profile-picture-2"
               size={150}
               src={
-                user.profile ? "http://localhost:3001/api/" + user.profile : ""
+                user.profile ? "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + user.profile : ""
               }
             />
           </div>
@@ -282,7 +282,7 @@ const UserProfile = () => {
                           avatar={
                             <Avatar
                               size={50}
-                              src={"http://localhost:3001/api/" + item.profile}
+                              src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + item.profile}
                             />
                           }
                           title={
@@ -400,7 +400,7 @@ const UserProfile = () => {
               {user.images?.map((img, index) => (
                 <Image
                   key={index}
-                  src={"http://localhost:3001/api/" + img?.url}
+                  src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + img?.url}
                   style={{ borderRadius: "8px" }}></Image>
               ))}
             </div>

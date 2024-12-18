@@ -2,7 +2,7 @@ import socketIOClient from "socket.io-client";
 
 class get_socket_connection {
     constructor() {
-        const URL = "http://localhost:3001";
+        const URL = "https://matchaa-backend-7bfca7ce8452.herokuapp.com";
         this.socket = socketIOClient(URL);
     }
 

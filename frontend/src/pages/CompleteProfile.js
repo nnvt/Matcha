@@ -6,6 +6,7 @@ import React, {
     useContext,
 } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import SearchControl from "../components/SearchControl";
 import "leaflet/dist/leaflet.css";
 import 'leaflet-geosearch/dist/geosearch.css';
 import cupid from "../assets/logo/cupid.svg";
@@ -49,16 +50,22 @@ import {
 const { Step } = Steps;
 // ?GET IP AND DATA FOR LOCALISATION
 const getIP = async () => {
-    const ipclient = await axios.get("https://api64.ipify.org/?format=json");
-    let ip = ipclient.data.ip;
-    let data = await axios.get("http://ip-api.com/json/" + ip);
-    return data;
+    try {
+        const ipResponse = await fetch("https://api64.ipify.org?format=json");
+        const ipData = await ipResponse.json();
+        const ip = ipData.ip;
+        const locationResponse = await fetch(`http://ip-api.com/json/${ip}`);
+        const locationData = await locationResponse.json();
+        return locationData;
+    } catch (error) {
+        console.error("Error fetching IP:", error);
+    }
 };
 
 const getTags = async () => {
     return new Promise(async (resolve, reject) => {
         await axios
-            .get("http://localhost:3001/api/tags/list")
+            .get("https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/tags/list")
             .then((res) => {
                 resolve(res.data.data);
             })
@@ -102,19 +109,14 @@ const Info = (props) => {
         setInputVisible(true);
     };
     // eslint-disable-next-line
-    useEffect(async () => {
-        await getTags().then((data) => {
-            let tags = data.map((tag) => {
-                return "#" + tag.name;
-            });
+    useEffect(() => {
+        async function fetchData() {
+            const data = await getTags();
+            const tags = data.map(tag => `#${tag.name}`);
             setOriginalTags(tags);
-            setOptions(
-                tags.map((t) => {
-                    return { value: t };
-                })
-            );
-        });
-        // eslint-disable-next-line
+            setOptions(tags.map(t => ({ value: t })));
+        }
+        fetchData();
     }, []);
 
     const onSearch = (searchText) => {
@@ -288,19 +290,22 @@ const Pictures = (props) => {
     const [gallery, setGallery] = useState([]);
 
     useEffect(() => {
-        if (!gallery.length && props.user.gallery.length)
-            setGallery(
-                props.user.gallery.map((g) => {
-                    let obj = {
-                        dataURL: URL.createObjectURL(g),
-                        file: g,
-                    };
-                    return obj;
-                })
-            );
-        if (profile === "" && props.user.profile !== "")
-            setProfile(URL.createObjectURL(props.user.profile[0]));
-        // eslint-disable-next-line
+        async function fetchData() {
+            if (!gallery.length && props.user.gallery.length)
+                setGallery(
+                    props.user.gallery.map((g) => {
+                        let obj = {
+                            dataURL: URL.createObjectURL(g),
+                            file: g,
+                        };
+                        return obj;
+                    })
+                );
+            if (profile === "" && props.user.profile !== "")
+                setProfile(URL.createObjectURL(props.user.profile[0]));
+            // eslint-disable-next-line
+        }
+        fetchData();
     }, []);
 
     const profileUpload = useRef(null);
@@ -416,19 +421,30 @@ const Pictures = (props) => {
 
 const Location = (props) => {
     // eslint-disable-next-line
-    useEffect(async () => {
-        navigator.geolocation.getCurrentPosition(() => "");
-        let data = await getIP();
+    useEffect(() => {
+        async function fetchData() {
+            navigator.geolocation.getCurrentPosition(() => "");
+            let data = await getIP();
+            console.log(data)
 
-        if (navigator.geolocation) {
-            props.setLocation(data.data);
-        } else {
-            props.setLocation(data.data);
+            if (navigator.geolocation) {
+                props.setLocation(data);
+            } else {
+                props.setLocation(data);
+            }
+            // eslint-disable-next-line
         }
-        // eslint-disable-next-line
+        fetchData();
     }, []);
 
     const position = [props.user.lat, props.user.lang];
+
+    const [customIcon, setCustomIcon] = useState(
+        L.icon({
+            iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
+            iconSize: [38, 38],
+        })
+    );
 
     L.Icon.Default.imagePath = "img/";
 
@@ -438,16 +454,16 @@ const Location = (props) => {
                 <MapContainer
                     style={{ height: "500px", width: "100wh" }}
                     center={position}
-                    zoom={13}
+                    zoom={5}
                     scrollWheelZoom={false}
                 >
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={position}>
+                    <Marker position={position} icon={customIcon}>
                         <Popup>
-                            We see you <br /> You are here.
+                            Your are here <br /> We see you.
                         </Popup>
                     </Marker>
                 </MapContainer>

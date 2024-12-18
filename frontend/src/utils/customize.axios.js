@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance with default configurations
 const api = axios.create({
-    baseURL: 'http://localhost:3001/api', // Base URL for your API
+    baseURL: 'https://matchaa-backend-7bfca7ce8452.herokuapp.com/api', // Base URL for your API
     headers: {
         'Content-Type': 'application/json',
     },

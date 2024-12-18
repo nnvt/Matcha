@@ -12,7 +12,7 @@ export const BrowsingAction = async (token, filters) => {
 
     try {
         const res = await axios.get(
-            "http://localhost:3001/api/users/find/suggestions",
+            "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/suggestions",
             config
         );
 
@@ -35,7 +35,7 @@ export const searchAction = async (token, search, filter) => {
 
     try {
         const res = await axios.post(
-            "http://localhost:3001/api/users/search",
+            "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/search",
             search,
             config
         );

@@ -29,7 +29,7 @@ export const History = () => {
           <List.Item key={item.id}>
             <List.Item.Meta
               avatar={
-                <Avatar src={"http://localhost:3001/api/" + item.profile} />
+                <Avatar src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + item.profile} />
               }
               title={
                 // eslint-disable-next-line

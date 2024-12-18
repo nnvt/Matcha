@@ -24,7 +24,7 @@ export const infoUpdate = async (token, userInfos) => {
 
   try {
     const res = await axios.patch(
-      "http://localhost:3001/api/users/edit/informations",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/edit/informations",
       editedData,
       config
     );
@@ -47,7 +47,7 @@ export const changePassword = async (token, data) => {
 
   try {
     const res = await axios.patch(
-      "http://localhost:3001/api/users/edit/password",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/edit/password",
       data,
       config
     );
@@ -68,7 +68,7 @@ export const changeLocation = async (token, data) => {
   };
   try {
     const res = await axios.patch(
-      "http://localhost:3001/api/users/edit/location",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/edit/location",
       data,
       config
     );
@@ -91,7 +91,7 @@ export const changeProfile = async (token, data) => {
   form.append("profile", data);
   try {
     const res = await axios.put(
-      "http://localhost:3001/api/images/profile/upload",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/images/profile/upload",
       form,
       config
     );
@@ -114,7 +114,7 @@ export const changeGallery = async (token, data) => {
   form.append("picture", data);
   try {
     const res = await axios.put(
-      "http://localhost:3001/api/images/upload",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/images/upload",
       form,
       config
     );
@@ -135,7 +135,7 @@ export const removeGallery = async (token, id) => {
 
   try {
     const res = await axios.delete(
-      "http://localhost:3001/api/images/delete/" + id,
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/images/delete/" + id,
 
       config
     );
@@ -157,7 +157,7 @@ export const historyAction = async (token) => {
 
   try {
     const res = await axios.get(
-      "http://localhost:3001/api/history/visits",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/visits",
       config
     );
 
@@ -178,7 +178,7 @@ export const blackListAction = async (token) => {
 
   try {
     const res = await axios.get(
-      "http://localhost:3001/api/users/find/black/list",
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/black/list",
       config
     );
 
@@ -199,7 +199,7 @@ export const blockAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "http://localhost:3001/api/users/block/" + id,
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/block/" + id,
       "",
       config
     );
@@ -220,7 +220,7 @@ export const unBlockAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "http://localhost:3001/api/users/unblock/" + id,
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/unblock/" + id,
       "",
       config
     );
@@ -242,7 +242,7 @@ export const ReportAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "http://localhost:3001/api/users/report/" + id,
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/report/" + id,
       "",
       config
     );
@@ -264,7 +264,7 @@ export const LikeAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "http://localhost:3001/api/users/like/" + id,
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/like/" + id,
       "",
       config
     );
@@ -286,7 +286,7 @@ export const UnLikeAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "http://localhost:3001/api/users/unlike/" + id,
+      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/unlike/" + id,
       "",
       config
     );

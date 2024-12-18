@@ -86,7 +86,7 @@ const UserInfo = ({ username }) => {
 
     try {
       const res = await axios.get(
-        "http://localhost:3001/api/users/find/user/username/" + username,
+        "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/user/username/" + username,
         config
       );
       return res.status === 200 ? res.data : false;
@@ -243,19 +243,19 @@ const UserInfo = ({ username }) => {
     switch (name) {
       case "viewers":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/viewers",
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/viewers",
           config
         );
         break;
       case "following":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/following/" + user.id,
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/following/" + user.id,
           config
         );
         break;
       case "followers":
         response = await axios.get(
-          "http://localhost:3001/api/history/user/followers/" + user.id,
+          "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/user/followers/" + user.id,
           config
         );
         break;
@@ -289,7 +289,7 @@ const UserInfo = ({ username }) => {
               id="profile-picture"
               size={150}
               src={
-                user.profile ? "http://localhost:3001/api/" + user.profile : ""
+                user.profile ? "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + user.profile : ""
               }
             />
           </div>
@@ -364,7 +364,7 @@ const UserInfo = ({ username }) => {
                           avatar={
                             <Avatar
                               size={50}
-                              src={"http://localhost:3001/api/" + item.profile}
+                              src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + item.profile}
                             />
                           }
                           title={
@@ -537,7 +537,7 @@ const UserInfo = ({ username }) => {
                 return (
                   <Image
                     key={index}
-                    src={`http://localhost:3001/api/${img?.url}`}
+                    src={`https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/${img?.url}`}
                     style={{ borderRadius: "8px" }}
                     onError={(e) => {
                     }}

@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Result, Button, Spin } from "antd";
 import axios from '../utils/customize.axios';
+import { useSearchParams } from 'react-router-dom';
+
 
 const Verify = (props) => {
   const [reqStatus, setStatus] = useState("sending");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const aToken = props.location.search.split("=")[1];
+
+  const [searchParams] = useSearchParams();
+  const aToken = searchParams.get('token');
+  console.log(aToken)
+
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -24,7 +30,7 @@ const Verify = (props) => {
       try {
         await axios
           .patch(
-            "http://localhost:3001/api/users/verify",
+            "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/verify",
             { token: aToken },
             config
           )

@@ -256,7 +256,7 @@ const SideBar = () => {
                   <List.Item.Meta
                     avatar={
                       <Avatar
-                        src={"http://localhost:3001/api/" + item.profile}
+                        src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + item.profile}
                       />
                     }
                     title={

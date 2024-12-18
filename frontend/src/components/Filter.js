@@ -72,7 +72,7 @@ export const Filter = (props) => {
     const getTags = async () => {
         return new Promise(async (resolve, reject) => {
             await axios
-                .get("http://localhost:3001/api/tags/list")
+                .get("https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/tags/list")
                 .then((res) => {
                     resolve(res.data.data);
                 })
