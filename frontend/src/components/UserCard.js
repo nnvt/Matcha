@@ -48,7 +48,7 @@ export const UserCard = (props) => {
               borderRadius: "15px 15px 0 0",
             }}
             alt="example"
-            src={"https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + props.data.profile}
+            src={`${process.env.REACT_APP_API_URL}/` + props.data.profile}
           />
         ) : (
           <Avatar size={280} icon={<UserOutlined />} />

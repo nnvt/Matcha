@@ -74,7 +74,7 @@ export const Search = (props) => {
     const getTags = async () => {
         return new Promise(async (resolve, reject) => {
             await axios
-                .get("https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/tags/list")
+                .get(`${process.env.REACT_APP_API_URL}/tags/list`)
                 .then((res) => {
                     resolve(res.data.data);
                 })

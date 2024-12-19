@@ -33,7 +33,7 @@ const DefaultLayout = ({ children }) => {
       try {
         const userData = await getUser();
         userData.profile = userData.images.filter((i) => {
-          if (i.profile === 1) return "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + i.url;
+          if (i.profile === 1) return `${process.env.REACT_APP_API_URL}/` + i.url;
         })[0];
         setUser(userData);
       } catch (error) {
@@ -53,7 +53,7 @@ const DefaultLayout = ({ children }) => {
       },
     };
     let user = await axios.get(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/profile",
+      `${process.env.REACT_APP_API_URL}/users/find/profile`,
       config
     );
     return { ...user.data };
@@ -105,7 +105,7 @@ const DefaultLayout = ({ children }) => {
                 size={47}
                 src={
                   user.profile.url
-                    ? "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + user.profile.url
+                    ? `${process.env.REACT_APP_API_URL}/` + user.profile.url
                     : ""
                 }></Avatar>
             </Link>

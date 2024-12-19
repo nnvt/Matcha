@@ -11,7 +11,7 @@ export const matchingAction = async (token) => {
 
     try {
         const res = await axios.get(
-            "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/matchers/list",
+            `${process.env.REACT_APP_API_URL}/matchers/list`,
             config
         );
 
@@ -33,7 +33,7 @@ export const msgAction = async (token, id) => {
 
     try {
         const res = await axios.get(
-            `https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/chat/messages/${id}`,
+            `${process.env.REACT_APP_API_URL}/chat/messages/${id}`,
             config
         );
 

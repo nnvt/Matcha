@@ -20,10 +20,13 @@ const Begin = () => {
                         color: "white",
                     }}
                 >
-                    Onlyfans
+                    DATING DESERVES BETTER
                 </Title>
                 <Paragraph style={{ color: "#f5f1f1" }}>
-                    ///////////////////////////////////
+                    On MATCHA, you’re more than just a photo. You have stories to tell,
+                    and passions to share, and things to talk about that are more
+                    interesting than the weather. Get noticed for who you are, not what
+                    you look like. Because you deserve what dating deserves: better.
                 </Paragraph>
                 <Row>
                     <Col md={11} span={24} style={{ marginBottom: "10px", marginRight: "10px" }}> {/* Thêm marginRight để tạo khoảng cách ngang giữa các nút */}

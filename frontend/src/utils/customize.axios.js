@@ -1,8 +1,12 @@
 import axios from 'axios';
 
+console.log(process.env.REACT_APP_API_URL)
+console.log(process.env.REACT_APP_BACKEND_URL);
+
+
 // Create an Axios instance with default configurations
 const api = axios.create({
-    baseURL: 'https://matchaa-backend-7bfca7ce8452.herokuapp.com/api', // Base URL for your API
+    baseURL: `${process.env.REACT_APP_API_URL}`, // Base URL for your API
     headers: {
         'Content-Type': 'application/json',
     },

@@ -24,7 +24,7 @@ export const infoUpdate = async (token, userInfos) => {
 
   try {
     const res = await axios.patch(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/edit/informations",
+      `${process.env.REACT_APP_API_URL}/users/edit/informations`,
       editedData,
       config
     );
@@ -47,7 +47,7 @@ export const changePassword = async (token, data) => {
 
   try {
     const res = await axios.patch(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/edit/password",
+      `${process.env.REACT_APP_API_URL}/users/edit/password`,
       data,
       config
     );
@@ -68,7 +68,7 @@ export const changeLocation = async (token, data) => {
   };
   try {
     const res = await axios.patch(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/edit/location",
+      `${process.env.REACT_APP_API_URL}/users/edit/location`,
       data,
       config
     );
@@ -91,7 +91,7 @@ export const changeProfile = async (token, data) => {
   form.append("profile", data);
   try {
     const res = await axios.put(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/images/profile/upload",
+      `${process.env.REACT_APP_API_URL}/images/profile/upload`,
       form,
       config
     );
@@ -114,7 +114,7 @@ export const changeGallery = async (token, data) => {
   form.append("picture", data);
   try {
     const res = await axios.put(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/images/upload",
+      `${process.env.REACT_APP_API_URL}/images/upload`,
       form,
       config
     );
@@ -135,7 +135,7 @@ export const removeGallery = async (token, id) => {
 
   try {
     const res = await axios.delete(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/images/delete/" + id,
+      `${process.env.REACT_APP_API_URL}/images/delete/` + id,
 
       config
     );
@@ -157,7 +157,7 @@ export const historyAction = async (token) => {
 
   try {
     const res = await axios.get(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/history/visits",
+      `${process.env.REACT_APP_API_URL}/history/visits`,
       config
     );
 
@@ -178,7 +178,7 @@ export const blackListAction = async (token) => {
 
   try {
     const res = await axios.get(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/black/list",
+      `${process.env.REACT_APP_API_URL}/users/find/black/list`,
       config
     );
 
@@ -199,7 +199,7 @@ export const blockAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/block/" + id,
+      `${process.env.REACT_APP_API_URL}/users/block/` + id,
       "",
       config
     );
@@ -220,7 +220,7 @@ export const unBlockAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/unblock/" + id,
+      `${process.env.REACT_APP_API_URL}/users/unblock/` + id,
       "",
       config
     );
@@ -242,7 +242,7 @@ export const ReportAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/report/" + id,
+      `${process.env.REACT_APP_API_URL}/users/report/` + id,
       "",
       config
     );
@@ -264,7 +264,7 @@ export const LikeAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/like/" + id,
+      `${process.env.REACT_APP_API_URL}/users/like/` + id,
       "",
       config
     );
@@ -286,7 +286,7 @@ export const UnLikeAction = async (token, id) => {
 
   try {
     const res = await axios.put(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/unlike/" + id,
+      `${process.env.REACT_APP_API_URL}/users/unlike/` + id,
       "",
       config
     );

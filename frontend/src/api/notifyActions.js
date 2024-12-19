@@ -11,7 +11,7 @@ export const notifyAction = async (token) => {
 
   try {
     const res = await axios.get(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/notifications/list",
+      `${process.env.REACT_APP_API_URL}/notifications/list`,
       config
     );
     if (res.data) return res?.data;
@@ -31,7 +31,7 @@ export const setNotifSeen = async (token, id) => {
   };
   try {
     const res = await axios.patch(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/notifications/read/" + id,
+      `${process.env.REACT_APP_API_URL}/notifications/read/` + id,
       "",
       config
     );
@@ -53,7 +53,7 @@ export const deleteNotif = async (token, id) => {
 
   try {
     const res = await axios.delete(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/notifications/delete/" + id,
+      `${process.env.REACT_APP_API_URL}/notifications/delete/` + id,
       config
     );
     if (res) return res.data;
@@ -73,7 +73,7 @@ export const setAllNotifSeen = async (token) => {
   };
   try {
     const res = await axios.patch(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/notifications/read",
+      `${process.env.REACT_APP_API_URL}/notifications/read`,
       "",
       config
     );
@@ -95,7 +95,7 @@ export const deleteAllNotif = async (token) => {
 
   try {
     const res = await axios.delete(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/notifications/delete",
+      `${process.env.REACT_APP_API_URL}/notifications/delete`,
       config
     );
     if (res) return res.data;

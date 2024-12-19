@@ -128,14 +128,14 @@ export const General = () => {
 
       userData.profile = userData.images.reduce((arr, i) => {
         if (i.profile === 1) {
-          arr.push({ dataURL: "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + i.url });
+          arr.push({ dataURL: `${process.env.REACT_APP_API_URL}/` + i.url });
         }
         return arr;
       }, []);
 
       userData.images = userData.images.filter((i) => {
         console.log(i.url);
-        if (i.profile === 0) return "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + i.url;
+        if (i.profile === 0) return `${process.env.REACT_APP_API_URL}/` + i.url;
       });
 
       userData.birthday = moment(userData.birthday);
@@ -186,7 +186,7 @@ export const General = () => {
       },
     };
     let user = await axios.get(
-      "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/users/find/profile",
+      `${process.env.REACT_APP_API_URL}/users/find/profile`,
       config
     );
 
@@ -196,7 +196,7 @@ export const General = () => {
   const getTags = async () => {
     return new Promise(async (resolve, reject) => {
       await axios
-        .get("https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/tags/list")
+        .get(`${process.env.REACT_APP_API_URL}/tags/list`)
         .then((res) => {
           resolve(res.data.data);
         })
@@ -664,7 +664,7 @@ export const General = () => {
                       <img
                         src={
                           image.url
-                            ? "https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/" + image.url
+                            ? `${process.env.REACT_APP_API_URL}/` + image.url
                             : image.dataURL
                         }
                         alt="..."

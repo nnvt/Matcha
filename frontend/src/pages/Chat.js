@@ -139,7 +139,7 @@ const Chat = () => {
                                         }}
                                     >
                                         <Row align="middle">
-                                            <Avatar src={`https://matchaa-backend-7bfca7ce8452.herokuapp.com/api/${item.profile}`} />
+                                            <Avatar src={`${process.env.REACT_APP_API_URL}/${item.profile}`} />
                                             <h3 style={{ marginBottom: "0px", marginLeft: "10px" }}>
                                                 {item.lastname}_{item.firstname}
                                             </h3>
