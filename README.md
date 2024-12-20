@@ -73,8 +73,7 @@
  - [Các công nghệ sử dụng](#Tech)
     - [Backend](#Tech1)
     - [Frontend](#Tech2)
-  
-  
+ - [Diagram](#Diagram)
  
 
 
@@ -208,6 +207,12 @@ Cảnh báo hoặc lỗi.
     - Tùy chỉnh cấu hình Webpack trong ứng dụng Create React App mà không cần eject.
 - #### nodemon:
     - Tự động tải lại ứng dụng Node.js phía server khi có thay đổi mã nguồn.
+
+## IV. Diagram <a name="Diagram"></a>
+
+<div style="display: flex; gap: 100px;">
+    <img src= diagram.png alt="Sơ đồ" width="150" style="border-radius: 150px;">
+  </div>
 
 
 
