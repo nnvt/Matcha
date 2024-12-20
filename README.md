@@ -211,7 +211,7 @@ Cảnh báo hoặc lỗi.
 ## IV. Diagram <a name="Diagram"></a>
 
 <div style="display: flex; gap: 100px;">
-    <img src= diagram.png alt="Sơ đồ" width="150" style="border-radius: 150px;">
+    <img src= diagram.png alt="Sơ đồ" width="300" style="border-radius: 150px;">
   </div>
 
 
